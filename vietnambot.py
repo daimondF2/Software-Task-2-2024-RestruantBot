@@ -10,15 +10,13 @@
 from Avatar2 import Avatar
 from NLPdemo import NLPdemo
 from SPXCafe2 import SPXCafe
+from rapidfuzz import fuzz, process
+from rapidfuzz.fuzz import partial_ratio
 class tenOutOfTenRestraunt():
     def __init__(self):
-        self.vietnamesePerson = Avatar("VietnamBot")
-        #   
-        # Introduction
-        # On startup, you application must identify itself by name and welcome the customer in a polite way
-        
+        self.SuperWaiter = Avatar("SuperBot")
+        self.nlp = NLPdemo()
         # if customer log in in database start this else try again so a while true loop
-        self.vietnamesePerson.say("Welcome to bot bot")
         self.greetings()
         self.welcomePerson
         self.getPersonName
@@ -31,23 +29,45 @@ class tenOutOfTenRestraunt():
     # Welcome them to the service
     # Ask for them to enter their first and lastnames separately
     def introduction(self):
-        self.vietnamesePerson.say("Welcome to Ten out of ten restraunt")
-        self.vietnamesePerson.say("Please Login or Sign up")
-    def greetings(self):
-        self.vietnamesePerson.say("what up my - how are you")
+        self.SuperWaiter.say("Welcome to Ten out of ten restraunt")
+        self.SuperWaiter.say("Welcome to bot I am Super Helpful ultra bot")
+
+    def LoginOrSignUpOrExit(self):
+        #inpNewOrReturning = self.SuperWaiter.listen("Please say Login if you want to Login, say sign up if you are new")
         while True:
-            self.vietnamesePerson.listen("")
-            self.firstname
-            self.lastName
+            inpNewOrReturning = input("Do you want to 'Login' or 'Signup' or 'Exit' ").lower()
+            if inpNewOrReturning == "login":
+                self.login()
+            elif inpNewOrReturning == "signup":
+                self.signUp()
+            elif inpNewOrReturning == "exit":
+                self.exit()
+            else:
+                self.SuperWaiter.say("Please try again")
+            
+    def login(self):
+        print("login")
+        self.firstname = 
+        self.lastName
         self.exit()
         # What is First name? - 
         # what is last name? 
         # check in database
         # if not in data base
+        # ask try again
+        # if forgot ask if they would like to sign up
+        # redirect
         # add name to datbase
         # if name in list
         # f" Welcome {getCustomerName()} {getCustomerLastName()}
         pass
+    def signUp(self):
+        print("signUp")
+        # ask name 
+        # ask last name
+        # add to database
+        # welcome again and give options to see menu
+    
     def getCustomer(self):
         pass
     def getCustomerName(self):
