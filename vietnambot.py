@@ -18,7 +18,6 @@ class tenOutOfTenRestraunt():
         self.nlp = NLPdemo()
         # if customer log in in database start this else try again so a while true loop
         self.greetings()
-        self.welcomePerson
         self.getPersonName
         self.getFirstName
     # Customer Greeting
@@ -28,6 +27,19 @@ class tenOutOfTenRestraunt():
     # Otherwise
     # Welcome them to the service
     # Ask for them to enter their first and lastnames separately
+
+    '''TO DO'''
+    # COMPLETE LOGIN AND SIGNUP STUFF
+    # CHECK DATBASE FOR LOGIN AND SIGNUP
+    # CREATE ORDER HISTORY IN DATBASE AND FILE
+    # ADD OPTIONS
+    # ADD OTHER OPTIONS LIKE TIME TO DATABASE
+
+
+    def greetings(self):
+        self.introduction()
+        self.LoginOrSignUpOrExit()
+
     def introduction(self):
         self.SuperWaiter.say("Welcome to Ten out of ten restraunt")
         self.SuperWaiter.say("Welcome to bot I am Super Helpful ultra bot")
@@ -37,17 +49,17 @@ class tenOutOfTenRestraunt():
         while True:
             inpNewOrReturning = input("Do you want to 'Login' or 'Signup' or 'Exit' ").lower()
             if inpNewOrReturning == "login":
-                self.login()
+                return self.login()
             elif inpNewOrReturning == "signup":
-                self.signUp()
+                return self.signUp()
             elif inpNewOrReturning == "exit":
-                self.exit()
+                return self.exit()
             else:
                 self.SuperWaiter.say("Please try again")
             
     def login(self):
         print("login")
-        self.firstname = 
+        self.firstname = input("What is your first name? ")
         self.lastName
         self.exit()
         # What is First name? - 
@@ -63,16 +75,35 @@ class tenOutOfTenRestraunt():
         pass
     def signUp(self):
         print("signUp")
+        self.getUserName()
         # ask name 
         # ask last name
         # add to database
         # welcome again and give options to see menu
+    
+    def getFirstName(self):
+        pass
+    def getLastName(self):
+        pass
     
     def getCustomer(self):
         pass
     def getCustomerName(self):
         pass
     def getCustomerLastName(self):
+        pass
+    def getUserName(self):
+        #ask for userName
+        #if username in database:
+        # login
+        #if not in database
+        # ask try again or forgot
+        #If forgot
+        # ask first name
+        # ask last name
+        #if in databse login
+        # else
+        #ask try again or ask sign up
         pass
     def exit(self):
         print("Thank you for coming to our thing")
