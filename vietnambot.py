@@ -57,7 +57,10 @@ class tenOutOfTenRestraunt():
     def exit(self):
         print("Thank you for coming to our thing")
         
-
+def main():
+    pass
+if __name__=="__main__":
+    main()
 # Customer Greeting
 #You must be able to identify each customer by asking their username (typed in for accuracy).
 #If they are existing Customers then, by name,
