@@ -31,6 +31,7 @@ class tenOutOfTenRestraunt():
     '''TO DO'''
     # COMPLETE LOGIN AND SIGNUP STUFF
     # CHECK DATBASE FOR LOGIN AND SIGNUP
+    # add database access
     # CREATE ORDER HISTORY IN DATBASE AND FILE
     # ADD OPTIONS
     # ADD OTHER OPTIONS LIKE TIME TO DATABASE
@@ -81,18 +82,12 @@ class tenOutOfTenRestraunt():
         # add to database
         # welcome again and give options to see menu
     
-    def getFirstName(self):
-        pass
-    def getLastName(self):
-        pass
-    
     def getCustomer(self):
         pass
     def getCustomerName(self):
         pass
     def getCustomerLastName(self):
         pass
-    def getUserName(self):
         #ask for userName
         #if username in database:
         # login
@@ -104,9 +99,97 @@ class tenOutOfTenRestraunt():
         #if in databse login
         # else
         #ask try again or ask sign up
+
+    def dataBase(self):
+        sql = None
+
         pass
+
+    def addUser(self):
+        sql = None
+        if self.getUserName():
+            sql = f"INSERT INTO Customers (userName) VALUES ({self.getUserName()})"
+        if self.getFirstName():
+            sql = f"INSERT INTO Customers (firstName) VALUES ({self.getFirstName()})"
+        if self.getLastName():
+            sql = f"INSERT INTO Customers (lastName) VALUES ({self.getLastName()})"
+    def existsDB(self):
+        '''check if object already exists in datbase'''
+        retcode = False
+        sql =None
+        # if self.getCustomerId():
+        #     sql  = f"SELECT count(*) AS count FROM customers WHERE customerId = {self.getCustomerId()}"
+        #     #print(sql)
+        if self.getUserName():
+            sql = f"SELECT count(*) AS count FROM Customers WHERE userName = {self.getUserName()}"
+        if sql:
+            countData = self.dbGetData(sql)  #1
+            if countData:
+                for countRec in countData:  # the count was getting data twice (overwrite) already got data from #1
+                    count  = int(countRec['count'])
+                if count >0:
+                    retcode = True
+
+        return retcode  #if true this will activate in the init and proceed to setcustomer.
+    
+    # def setCustomer(self, userName= None, customerId = None):
+    #     '''Creates customer Object from database info
+    #     arguments: either userName or cusomter Ide'''
+
+    #     retcode = False
+    #     if userName:
+    #         self.setUserName(userName)
+    #     if customerId:
+    #         self.setCustomerId(customerId)
+    #     customerData =None
+    #     if self.getCustomerId(): # customer must exist
+    #         sql = f'''
+    #             SELECT customerId, userName, firstName, lastName
+    #             FROM custumers
+    #             WHERE customerId = {self.getCustomerId()}
+    #             ORDER BY customerId'''
+        
+    #     # eithernew cusotmer orexisting get useoing username
+    #     elif self.getUserName():
+    #         sql  =f'''
+    #             SELECT customerId, userName, firstName, lastName
+    #             FROM customers
+    #             WHERE userName = '{self.getUserName()}'
+    #             ORDER BY customerId
+    #             '''
+    #     customerData = self.dbGetData(sql)
+
+    #     if customerData:
+    #         #Eiting customer = should only be one customer
+    #         for cusomter in customerData:
+    #             self.customerId = customer['customerId']
+    #             self.userName = customer['userName']
+    #             self.firstName = customer['firstName']
+    #             self.lastName = customer['lastName']
+    #             # Call ORDER factory method to return a list of order objects/instances - pass self to it
+    #             # self.setORders(Order.getORders(self))
+    #             retcode = True
+    #     return retcode
+
     def exit(self):
         print("Thank you for coming to our thing")
+
+    # Getters/ setters
+    def setFirstName(self, firstName = None):
+        self.__firstName= firstName
+    
+    def setLastName(self, lastName = None):
+        self.__lastName= lastName
+
+    def setUserName(self, userName= None):
+        self.__userName= userName
+        
+    def getFirstName(self):
+        return self.__firstName
+    def getLastName(self):
+        return self.__lastName
+    def getUserName(self):
+        return self.__userName
         
 def main():
     pass
