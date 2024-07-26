@@ -1,6 +1,5 @@
 #You are to create a Restaurant Online Take Away Ordering Service 
 #Chat Bot named by the type of food your restaurant serves
-# Vietnamese Food – call yours VietnamBot
 # You need to Identify a Customer - new or existing
 # Interact with the Customer to
 # View order history
@@ -18,8 +17,6 @@ class tenOutOfTenRestraunt():
         self.nlp = NLPdemo()
         # if customer log in in database start this else try again so a while true loop
         self.greetings()
-        self.getPersonName
-        self.getFirstName
     # Customer Greeting
     # You must be able to identify each customer by asking their username (typed in for accuracy).
     # If they are existing Customers then, by name,
@@ -76,9 +73,13 @@ class tenOutOfTenRestraunt():
         pass
     def signUp(self):
         print("signUp")
-        self.getUserName()
-        # ask name 
-        # ask last name
+        userName = self.SuperWaiter.listen("Please enter your username: ",useSR=False)
+        self.setUserName(userName)
+        # check if userName
+        firstName = self.SuperWaiter.listen("Please enter your first name: ",useSR=False)
+        self.setFirstName(firstName)
+        lastName = self.SuperWaiter.listen("Please enter your last name: ",useSR=False)
+        self.setLastName(lastName)
         # add to database
         # welcome again and give options to see menu
     
@@ -190,7 +191,7 @@ class tenOutOfTenRestraunt():
         return self.__lastName
     def getUserName(self):
         return self.__userName
-        
+
 def main():
     pass
 if __name__=="__main__":
