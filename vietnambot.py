@@ -11,7 +11,7 @@ from NLPdemo import NLPdemo
 from SPXCafe2 import SPXCafe
 from rapidfuzz import fuzz, process
 from rapidfuzz.fuzz import partial_ratio
-class tenOutOfTenRestraunt():
+class tenOutOfTenRestraunt(SPXCafe):
     def __init__(self):
         self.SuperWaiter = Avatar("SuperBot")
         self.nlp = NLPdemo()
@@ -73,14 +73,20 @@ class tenOutOfTenRestraunt():
         pass
     def signUp(self):
         print("signUp")
-        userName = self.SuperWaiter.listen("Please enter your username: ",useSR=False)
-        self.setUserName(userName)
-        # check if userName
-        firstName = self.SuperWaiter.listen("Please enter your first name: ",useSR=False)
-        self.setFirstName(firstName)
-        lastName = self.SuperWaiter.listen("Please enter your last name: ",useSR=False)
-        self.setLastName(lastName)
-        # add to database
+        variable = True
+        while variable == True:
+            userName = self.SuperWaiter.listen("Please enter your username (Case Sensitive): ",useSR=False)
+            self.setUserName(userName)
+            if self.existsDB(): # checks if username in database to prevent overlapping 
+                firstName = self.SuperWaiter.listen("Please enter your first name: ",useSR=False).lower()
+                self.setFirstName(firstName)
+                lastName = self.SuperWaiter.listen("Please enter your last name: ",useSR=False).lower()
+                self.setLastName(lastName)
+                self.addUser() # adds users to database
+                variable = False
+            else:
+                self.SuperWaiter.say("This username already exists! Please try a different username")
+
         # welcome again and give options to see menu
     
     def getCustomer(self):
@@ -114,13 +120,14 @@ class tenOutOfTenRestraunt():
             sql = f"INSERT INTO Customers (firstName) VALUES ({self.getFirstName()})"
         if self.getLastName():
             sql = f"INSERT INTO Customers (lastName) VALUES ({self.getLastName()})"
+
     def existsDB(self):
         '''check if object already exists in datbase'''
         retcode = False
         sql =None
-        # if self.getCustomerId():
-        #     sql  = f"SELECT count(*) AS count FROM customers WHERE customerId = {self.getCustomerId()}"
-        #     #print(sql)
+        if self.getCustomerId():
+            sql  = f"SELECT count(*) AS count FROM customers WHERE customerId = {self.getCustomerId()}"
+            #print(sql)
         if self.getUserName():
             sql = f"SELECT count(*) AS count FROM Customers WHERE userName = {self.getUserName()}"
         if sql:
