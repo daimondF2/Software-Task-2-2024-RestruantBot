@@ -21,8 +21,9 @@ class tenOutOfTenRestraunt(SPXCafe):
         self.nlp = NLPdemo()
         self.cafe= SPXCafe()
         # if customer log in in database start this else try again so a while true loop
-        self.instructions()
-        print("Cafe Name")
+        print("------------------------ Cafe Name ------------------------")
+        self.introduction()
+        self.LoginOrSignUpOrExit()
     # Customer Greeting
     # You must be able to identify each customer by asking their username (typed in for accuracy).
     # If they are existing Customers then, by name,
@@ -35,10 +36,7 @@ class tenOutOfTenRestraunt(SPXCafe):
     # CREATE ORDER HISTORY IN DATBASE AND FILE
     # ADD OPTIONS
     # ADD OTHER things LIKE TIME TO DATABASE
-
-    def instructions(self):
-        self.introduction()
-        self.LoginOrSignUpOrExit()
+    # add fuzzy logic
         #self.options() # Need to setup options for the customer
     def introduction(self):
         self.SuperWaiter.say("Welcome to Ten out of ten restraunt")
@@ -72,33 +70,28 @@ class tenOutOfTenRestraunt(SPXCafe):
             self.signUp()
 
     def signUp(self):
-        print("signUp")
-        variable = True
-        while variable == True:
+        '''Sign up (Where customer joins)'''
+        attempts = True
+        while attempts == True:
             self.SuperWaiter.say("Please enter your username: ")
-            userName = input("Please enter your username: ").lower()
-            self.setUserName(userName)
-            self.existsDBUserName()
+            userName = input("Please enter your username: ").lower() # for accuracy
+            self.setUserName(userName) # sets username
+            self.existsDBUserName() # might be overlapping commands not to sure
             if self.existsDBUserName(): # checks if username in database to prevent overlapping 
                 self.SuperWaiter.say("This username already exists! Please try a different username")
             else:
                 firstName = self.SuperWaiter.say("Please enter your first name: ")
-                firstName = input("Please enter your first name: ").lower()
-                self.setFirstName(firstName)
-                self.SuperWaiter.say("Please enter your last name: ")
-                lastName = input("Please enter your last name: ").lower()
-                self.setLastName(lastName)
-                self.save() # adds users to database
-                self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!")
-                variable = False
-        print("Finished signup")
+                firstName = input("Please enter your first name: ").lower() # asks first Name
+                self.setFirstName(firstName)                                # sets first Name
+                self.SuperWaiter.say("Please enter your last name: ")       
+                lastName = input("Please enter your last name: ").lower()   # asks last name .lower()
+                self.setLastName(lastName)                                  # sets last name
+                self.saveCustomer()                                         # adds users to database (saves)
+                self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
+                attempts = False   # ends signup loop
+        # print("Finished signup")
         self.getRequest()
-        # self.options()
 
-    def dataBase(self):
-        sql = None
-        pass
-    
     def existsDBUserName(self):
         '''check if object already exists in datbase'''
         retcode = False
@@ -117,6 +110,27 @@ class tenOutOfTenRestraunt(SPXCafe):
                     retcode = True
         return retcode  #Returns True for if statements to check if database
     
+    def saveCustomer(self): # Saves login data
+        '''saves the signup data into record and if changes in names and stuff'''
+        if self.existsDBUserName():     # for changing username and stuff will see to it later!!!
+            sql = f'''UPDATE customers SET
+                customerId = {self.getCustomerId()},
+                userName = '{self.getUserName()}',
+                firstName = '{self.getFirstName()}',
+                lastName = '{self.getLastName()}'
+            WHERE customerId={self.getCustomerId()}'''
+            self.cafe.dbChangeData(sql)
+        else:
+            sql = f'''INSERT INTO customers (userName, firstName, lastName) VALUES
+                ('{self.getUserName()}','{self.getFirstName()}','{self.getLastName()}')'''
+            print(sql)
+            self.customerId = self.cafe.dbPutData(sql)
+            # self.setCustomerID(self.dbPutData(sql))
+
+    def exit(self):
+        print("Thank you for coming to our thing")
+
+    # Getters/ setters
     def setCustomer(self, userName= None, customerId = None):
         customerData = None
         if self.getUserName():
@@ -172,27 +186,6 @@ class tenOutOfTenRestraunt(SPXCafe):
     #             # self.setORders(Order.getORders(self))
     #             retcode = True
     #     return retcode
-    def save(self):
-        '''saves the stuff into record'''
-        if self.existsDBUserName():     # for changing username and stuff will see to it later!!!
-            sql = f'''UPDATE customers SET
-                customerId = {self.getCustomerId()},
-                userName = '{self.getUserName()}',
-                firstName = '{self.getFirstName()}',
-                lastName = '{self.getLastName()}'
-            WHERE customerId={self.getCustomerId()}'''
-            self.cafe.dbChangeData(sql)
-        else:
-            sql = f'''INSERT INTO customers (userName, firstName, lastName) VALUES
-                ('{self.getUserName()}','{self.getFirstName()}','{self.getLastName()}')'''
-            print(sql)
-            self.customerId = self.cafe.dbPutData(sql)
-            # self.setCustomerID(self.dbPutData(sql))
-
-    def exit(self):
-        print("Thank you for coming to our thing")
-
-    # Getters/ setters
     def setFirstName(self, firstName = None):
         self.__firstName= firstName
     def setLastName(self, lastName = None):
@@ -209,7 +202,7 @@ class tenOutOfTenRestraunt(SPXCafe):
         return self.__userName
     def getRequest(self):
         self.SuperWaiter.say("What would you like to do?")
-        self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=True)
+        self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
         # keywords = 
 
 
