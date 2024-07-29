@@ -34,9 +34,10 @@ class tenOutOfTenRestraunt(SPXCafe):
     # ADD OTHER OPTIONS LIKE TIME TO DATABASE
 
 
-    def greetings(self):
+    def instructions(self):
         self.introduction()
         self.LoginOrSignUpOrExit()
+        self.options() # Need to setup options for the customer
 
     def introduction(self):
         self.SuperWaiter.say("Welcome to Ten out of ten restraunt")
@@ -57,8 +58,9 @@ class tenOutOfTenRestraunt(SPXCafe):
             
     def login(self):
         print("login")
-        self.firstname = input("What is your first name? ")
-        self.lastName
+        userName = self.SuperWaiter.listen("Please enter your username (Case and Space Sensitive): ", useSR=False)
+        self.setUserName(userName)
+
         self.exit()
         # What is First name? - 
         # what is last name? 
@@ -75,7 +77,7 @@ class tenOutOfTenRestraunt(SPXCafe):
         print("signUp")
         variable = True
         while variable == True:
-            userName = self.SuperWaiter.listen("Please enter your username (Case Sensitive): ",useSR=False)
+            userName = self.SuperWaiter.listen("Please enter your username (Case and Space Sensitive): ",useSR=False)
             self.setUserName(userName)
             if self.existsDB(): # checks if username in database to prevent overlapping 
                 firstName = self.SuperWaiter.listen("Please enter your first name: ",useSR=False).lower()
@@ -83,30 +85,11 @@ class tenOutOfTenRestraunt(SPXCafe):
                 lastName = self.SuperWaiter.listen("Please enter your last name: ",useSR=False).lower()
                 self.setLastName(lastName)
                 self.addUser() # adds users to database
+                self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName} {lastName}!")
                 variable = False
             else:
                 self.SuperWaiter.say("This username already exists! Please try a different username")
-
-        # welcome again and give options to see menu
-    
-    def getCustomer(self):
-        pass
-    def getCustomerName(self):
-        pass
-    def getCustomerLastName(self):
-        pass
-        #ask for userName
-        #if username in database:
-        # login
-        #if not in database
-        # ask try again or forgot
-        #If forgot
-        # ask first name
-        # ask last name
-        #if in databse login
-        # else
-        #ask try again or ask sign up
-
+        self.options()
     def dataBase(self):
         sql = None
 
@@ -125,9 +108,6 @@ class tenOutOfTenRestraunt(SPXCafe):
         '''check if object already exists in datbase'''
         retcode = False
         sql =None
-        if self.getCustomerId():
-            sql  = f"SELECT count(*) AS count FROM customers WHERE customerId = {self.getCustomerId()}"
-            #print(sql)
         if self.getUserName():
             sql = f"SELECT count(*) AS count FROM Customers WHERE userName = {self.getUserName()}"
         if sql:
@@ -140,7 +120,27 @@ class tenOutOfTenRestraunt(SPXCafe):
 
         return retcode  #if true this will activate in the init and proceed to setcustomer.
     
-    # def setCustomer(self, userName= None, customerId = None):
+    def setCustomer(self, userName= None, customerId = None):
+        customerData = None
+        if self.getUserName():
+            sql  =f'''
+                SELECT customerId, userName, firstName, lastName
+                FROM customers
+                WHERE userName = '{self.getUserName()}'
+                ORDER BY customerId
+                '''
+        customerData = self.dbGetData(sql)
+        if customerData:
+            #Eiting customer = should only be one customer
+            for cusomter in customerData:
+                self.customerId = customer['customerId']
+                self.userName = customer['userName']
+                self.firstName = customer['firstName']
+                self.lastName = customer['lastName']
+                # Call ORDER factory method to return a list of order objects/instances - pass self to it
+                # self.setORders(Order.getORders(self))
+                retcode = True
+        return retcode
     #     '''Creates customer Object from database info
     #     arguments: either userName or cusomter Ide'''
 
