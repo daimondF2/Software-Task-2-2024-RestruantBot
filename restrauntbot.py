@@ -71,6 +71,14 @@ class tenOutOfTenRestraunt(SPXCafe):
             self.exit()
         # keywords = 
 
+    def isMatch(self, courseName= None):
+        '''To edit fuzzy'''
+        # confidence = partial_ratio(courseName.lower(), self.getCourseName().lower()) # to edit
+        # print(courseName, self.getCourseName(), confidence)
+        if confidence >80:
+            return True
+        else:
+            return False
 # ARCHIVE OF CODE THAT COULD WORK
     # def addUser(self):
     #     sql = None
