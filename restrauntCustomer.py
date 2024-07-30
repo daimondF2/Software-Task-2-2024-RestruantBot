@@ -14,47 +14,32 @@ class tenOutOfTenCustomer(SPXCafe):
             self.SuperWaiter.say("Do you want to enter or 'Exit' ")
             inpNewOrReturning = input("Do you want to 'enter' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
             if inpNewOrReturning == "enter":
-                return self.getCusotmer()
+                return self.getCusotmerLoginOrSignUp()
             elif inpNewOrReturning == "exit":
                 return self.exitCustomer()
             else:
                 self.SuperWaiter.say("Please try again")
 
-    # def login(self):
-    #     print("login")
-    #     login = False
-    #     self.SuperWaiter.say("Please enter your username: ")
-    #     userName = input("Please enter your username: ").lower()    # for accuracy
-    #     self.setUserName(userName)
-    #     if self.existsDBUserName(): # checks if username is in database
-    #         login = True
-    #     else:                       # Person only has one chance to get their username right
-    #         print("Username incorrect!")
-    #         self.SuperWaiter.say("Your UserName is incorrect!")
-    #         self.SuperWaiter.say("Redirecting to signUp")
-    #         self.signUp()
-    #     return login
-
-    def getCusotmer(self):
-        '''Sign up (Where customer joins)'''
+    def getCusotmerLoginOrSignUp(self):
+        '''login or signup'''
         signedUp = False
-        while signedUp == False:
-            self.SuperWaiter.say("Please enter your username: ")
-            userName = input("Please enter your username: ").lower() # for accuracy
-            self.setUserName(userName) # sets username
-            self.existsDBUserName() # might be overlapping commands not to sure
-            if self.existsDBUserName(): # checks if username in database to prevent overlapping 
-                self.signedUp = True
-            else:
-                firstName = self.SuperWaiter.say("Please enter your first name: ")
-                firstName = input("Please enter your first name: ").lower() # asks first Name
-                self.setFirstName(firstName)                                # sets first Name
-                self.SuperWaiter.say("Please enter your last name: ")       
-                lastName = input("Please enter your last name: ").lower()   # asks last name .lower()
-                self.setLastName(lastName)                                  # sets last name
-                self.saveCustomer()                                         # adds users to database (saves)
-                self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
-                signedUp = True # ends signup loop
+        self.SuperWaiter.say("Please enter your username: ")
+        userName = input("Please enter your username: ").lower() # for accuracy
+        self.setUserName(userName) # sets username
+        if self.existsDBUserName(): # checks if username in database to prevent overlapping 
+            self.setCustomer(userName)
+            self.SuperWaiter.say(f"Welcome back to TenOutOfTenRestraunt by Cree gaming, {self.getFirstName()} {self.getLastName}!")
+            signedUp = True
+        else:
+            firstName = self.SuperWaiter.say("Please enter your first name: ")
+            firstName = input("Please enter your first name: ").lower() # asks first Name
+            self.setFirstName(firstName)                                # sets first Name
+            self.SuperWaiter.say("Please enter your last name: ")       
+            lastName = input("Please enter your last name: ").lower()   # asks last name .lower()
+            self.setLastName(lastName)                                  # sets last name
+            self.saveCustomer()                                         # adds users to database (saves)
+            self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
+            signedUp = True # ends signup loop
         # print("Finished signup")
         return signedUp
 
@@ -109,7 +94,7 @@ class tenOutOfTenCustomer(SPXCafe):
                 WHERE userName = '{self.getUserName()}'
                 ORDER BY customerId
                 '''
-        customerData = self.dbGetData(sql)
+        customerData = self.cafe.dbGetData(sql)
         if customerData:
             #Eiting customer = should only be one customer
             for customer in customerData:
@@ -120,6 +105,10 @@ class tenOutOfTenCustomer(SPXCafe):
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
                 # self.setORders(Order.getORders(self))
                 retcode = True
+        self.setFirstName(self.firstName)
+        self.setLastName(self.lastName)
+        self.setCustomerId(self.customerId)
+
         return retcode
 
     def setFirstName(self, firstName = None):
@@ -129,14 +118,25 @@ class tenOutOfTenCustomer(SPXCafe):
     def setUserName(self, userName= None):
         self.__userName= userName
     def setCustomerId(self, customerId=None):
-        self.__customerId=customerId   
+        self.__customerId=customerId
+    def getCustomerId(self):
+        return self.__customerId  
     def getFirstName(self):
         return self.__firstName
     def getLastName(self):
         return self.__lastName
     def getUserName(self):
         return self.__userName
-
+def main():
+    '''test harness'''
+    customer= tenOutOfTenCustomer()
+    customer.getCusotmerLoginOrSignUp()
+    print(customer.getCustomerId())
+    print(customer.getFirstName())
+    print(customer.getLastName())
+    print(customer.getUserName())
+if __name__=="__main__":
+    main()
 # Notes
     #     '''Creates customer Object from database info
     #     arguments: either userName or cusomter Ide'''
@@ -172,3 +172,17 @@ class tenOutOfTenCustomer(SPXCafe):
     #             # self.setORders(Order.getORders(self))
     #             retcode = True
     #     return retcode
+        # def login(self):
+    #     print("login")
+    #     login = False
+    #     self.SuperWaiter.say("Please enter your username: ")
+    #     userName = input("Please enter your username: ").lower()    # for accuracy
+    #     self.setUserName(userName)
+    #     if self.existsDBUserName(): # checks if username is in database
+    #         login = True
+    #     else:                       # Person only has one chance to get their username right
+    #         print("Username incorrect!")
+    #         self.SuperWaiter.say("Your UserName is incorrect!")
+    #         self.SuperWaiter.say("Redirecting to signUp")
+    #         self.signUp()
+    #     return login
