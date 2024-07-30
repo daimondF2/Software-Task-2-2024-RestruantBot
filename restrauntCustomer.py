@@ -5,7 +5,7 @@ class tenOutOfTenCustomer(SPXCafe):
     def __init__(self):
         '''Constructor method'''
         super().__init__()
-        self.SuperWaiter = Avatar("SuperBot")
+        self.SuperWaiter = Avatar("tenOutOfTenRestraunt Bot")
 
     def greetings(self):
         '''login or signup options'''
