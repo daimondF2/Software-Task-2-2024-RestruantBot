@@ -7,47 +7,44 @@ class tenOutOfTenCustomer(SPXCafe):
         self.SuperWaiter = Avatar("SuperBot")
         self.cafe = SPXCafe()
 
-    def LoginOrSignUpOrExit(self):
+    def greetings(self):
         '''login or signup options'''
         #inpNewOrReturning = self.SuperWaiter.listen("Please say Login if you want to Login, say sign up if you are new")
         while True:
-            self.SuperWaiter.say("Do you want to 'Login' or 'Signup' or 'Exit' ")
-            inpNewOrReturning = input("Do you want to 'Login' or 'Signup' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
-            if inpNewOrReturning == "login":
-                return self.login()
-            elif inpNewOrReturning == "signup":
-                return self.signUp()
+            self.SuperWaiter.say("Do you want to enter or 'Exit' ")
+            inpNewOrReturning = input("Do you want to 'enter' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
+            if inpNewOrReturning == "enter":
+                return self.getCusotmer()
             elif inpNewOrReturning == "exit":
                 return self.exitCustomer()
             else:
                 self.SuperWaiter.say("Please try again")
 
-    def login(self):
-        print("login")
-        login = False
-        self.SuperWaiter.say("Please enter your username: ")
-        userName = input("Please enter your username: ").lower()    # for accuracy
-        self.setUserName(userName)
-        if self.existsDBUserName(): # checks if username is in database
-            login = True
-        else:                       # Person only has one chance to get their username right
-            print("Username incorrect!")
-            self.SuperWaiter.say("Your UserName is incorrect!")
-            self.SuperWaiter.say("Redirecting to signUp")
-            self.signUp()
-        return login
+    # def login(self):
+    #     print("login")
+    #     login = False
+    #     self.SuperWaiter.say("Please enter your username: ")
+    #     userName = input("Please enter your username: ").lower()    # for accuracy
+    #     self.setUserName(userName)
+    #     if self.existsDBUserName(): # checks if username is in database
+    #         login = True
+    #     else:                       # Person only has one chance to get their username right
+    #         print("Username incorrect!")
+    #         self.SuperWaiter.say("Your UserName is incorrect!")
+    #         self.SuperWaiter.say("Redirecting to signUp")
+    #         self.signUp()
+    #     return login
 
-    def signUp(self):
+    def getCusotmer(self):
         '''Sign up (Where customer joins)'''
         signedUp = False
-        attempts = True
-        while attempts == True:
+        while signedUp == False:
             self.SuperWaiter.say("Please enter your username: ")
             userName = input("Please enter your username: ").lower() # for accuracy
             self.setUserName(userName) # sets username
             self.existsDBUserName() # might be overlapping commands not to sure
             if self.existsDBUserName(): # checks if username in database to prevent overlapping 
-                self.SuperWaiter.say("This username already exists! Please try a different username")
+                self.signedUp = True
             else:
                 firstName = self.SuperWaiter.say("Please enter your first name: ")
                 firstName = input("Please enter your first name: ").lower() # asks first Name
@@ -57,8 +54,7 @@ class tenOutOfTenCustomer(SPXCafe):
                 self.setLastName(lastName)                                  # sets last name
                 self.saveCustomer()                                         # adds users to database (saves)
                 self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
-                signedUp = True
-                attempts = False   # ends signup loop
+                signedUp = True # ends signup loop
         # print("Finished signup")
         return signedUp
 
