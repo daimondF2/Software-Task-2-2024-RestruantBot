@@ -5,7 +5,7 @@ class tenOutOfTenCustomer(SPXCafe):
     def __init__(self):
         '''Constructor method'''
         self.SuperWaiter = Avatar("SuperBot")
-        self.cafe = SPXCafe
+        self.cafe = SPXCafe()
 
     def LoginOrSignUpOrExit(self):
         '''login or signup options'''
@@ -18,25 +18,28 @@ class tenOutOfTenCustomer(SPXCafe):
             elif inpNewOrReturning == "signup":
                 return self.signUp()
             elif inpNewOrReturning == "exit":
-                return self.exit()
+                return self.exitCustomer()
             else:
                 self.SuperWaiter.say("Please try again")
 
     def login(self):
         print("login")
+        login = False
         self.SuperWaiter.say("Please enter your username: ")
         userName = input("Please enter your username: ").lower()    # for accuracy
         self.setUserName(userName)
         if self.existsDBUserName(): # checks if username is in database
-            self.getRequest()
+            login = True
         else:                       # Person only has one chance to get their username right
             print("Username incorrect!")
             self.SuperWaiter.say("Your UserName is incorrect!")
             self.SuperWaiter.say("Redirecting to signUp")
             self.signUp()
+        return login
 
     def signUp(self):
         '''Sign up (Where customer joins)'''
+        signedUp = False
         attempts = True
         while attempts == True:
             self.SuperWaiter.say("Please enter your username: ")
@@ -54,9 +57,10 @@ class tenOutOfTenCustomer(SPXCafe):
                 self.setLastName(lastName)                                  # sets last name
                 self.saveCustomer()                                         # adds users to database (saves)
                 self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
+                signedUp = True
                 attempts = False   # ends signup loop
         # print("Finished signup")
-        self.getRequest()
+        return signedUp
 
     def existsDBUserName(self):
         '''check if object already exists in datbase'''
@@ -92,6 +96,11 @@ class tenOutOfTenCustomer(SPXCafe):
             print(sql)
             self.customerId = self.cafe.dbPutData(sql)
             # self.setCustomerID(self.dbPutData(sql))
+
+    def exitCustomer(self):
+        print("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
+        self.SuperWaiter.say("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
+        return False
 
 # Getters/Setters
     def setCustomer(self, userName= None, customerId = None): # will have to get customer Id
@@ -131,10 +140,6 @@ class tenOutOfTenCustomer(SPXCafe):
         return self.__lastName
     def getUserName(self):
         return self.__userName
-    
-
-
-
 
 # Notes
     #     '''Creates customer Object from database info
