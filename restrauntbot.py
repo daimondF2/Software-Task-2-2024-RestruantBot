@@ -18,14 +18,14 @@ from restrauntCustomer import tenOutOfTenCustomer
 class tenOutOfTenRestraunt(SPXCafe):
     def __init__(self):
         '''Constructor method'''
+        super().__init__()
         self.SuperWaiter = Avatar("SuperBot") #
         self.nlp = NLPdemo()
-        self.cafe= SPXCafe()
         self.callMenu = Menu()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
         self.customer = tenOutOfTenCustomer()
-        if self.customer.LoginOrSignUpOrExit(): #if true get request else move to signup
+        if self.customer.getCusotmerLoginOrSignUp(): #if true get request else move to signup
             self.getRequest()
 
 
@@ -51,7 +51,8 @@ class tenOutOfTenRestraunt(SPXCafe):
         # ask for food 
         # make a match case senario using fuzzy logic where the waiter listens
         # to what the customer wants
-        
+    def getFoodOrder(self):
+        self.Order
     def exit(self):
         print("Thank you for coming to our thing")
 
@@ -66,19 +67,25 @@ class tenOutOfTenRestraunt(SPXCafe):
         if option == "order history":
             self.orderHistory()
         if option == "Order":
-            self.order()
+            self.getFoodOrder()
         if option == "Exit":
             self.exit()
         # keywords = 
 
     def isMatch(self, courseName= None):
-        '''To edit fuzzy'''
+        '''To edit fuzzy''' # To do later
         # confidence = partial_ratio(courseName.lower(), self.getCourseName().lower()) # to edit
         # print(courseName, self.getCourseName(), confidence)
         if confidence >80:
             return True
         else:
             return False
+def main():
+    test = tenOutOfTenRestraunt()
+
+if __name__=="__main__":
+    main()        
+
 # ARCHIVE OF CODE THAT COULD WORK
     # def addUser(self):
     #     sql = None
@@ -91,11 +98,7 @@ class tenOutOfTenRestraunt(SPXCafe):
         # sql = f'''INSERT INTO customers (userName, firstName, lastName) VALUES
         #         ('{self.getUserName()}','{self.getFirstName()}','{self.getLastName()}')'''
         # self.dbPutData(sql) 
-def main():
-    test = tenOutOfTenRestraunt()
 
-if __name__=="__main__":
-    main()
 
 #You must be able to store orders for a particular customer username 
 #– using order numbers to differentiate between each order the customer made

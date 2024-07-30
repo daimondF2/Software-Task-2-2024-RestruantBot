@@ -4,8 +4,8 @@ class tenOutOfTenCustomer(SPXCafe):
 
     def __init__(self):
         '''Constructor method'''
+        super().__init__()
         self.SuperWaiter = Avatar("SuperBot")
-        self.cafe = SPXCafe()
 
     def greetings(self):
         '''login or signup options'''
@@ -28,7 +28,7 @@ class tenOutOfTenCustomer(SPXCafe):
         self.setUserName(userName) # sets username
         if self.existsDBUserName(): # checks if username in database to prevent overlapping 
             self.setCustomer(userName)
-            self.SuperWaiter.say(f"Welcome back to TenOutOfTenRestraunt by Cree gaming, {self.getFirstName()} {self.getLastName}!")
+            self.SuperWaiter.say(f"Welcome back to TenOutOfTenRestraunt by Cree gaming, {self.getFirstName()} {self.getLastName()}!")
             signedUp = True
         else:
             firstName = self.SuperWaiter.say("Please enter your first name: ")
@@ -51,7 +51,7 @@ class tenOutOfTenCustomer(SPXCafe):
             sql = f'''SELECT count(*) AS count FROM Customers WHERE userName = '{self.getUserName()}' ''' #sql checks for amount of usernames in database
             # print(sql)
         if sql:
-            countData = self.cafe.dbGetData(sql)
+            countData = self.dbGetData(sql)
             # print(countData)
             if countData:
                 for countRec in countData: 
@@ -75,7 +75,7 @@ class tenOutOfTenCustomer(SPXCafe):
             sql = f'''INSERT INTO customers (userName, firstName, lastName) VALUES
                 ('{self.getUserName()}','{self.getFirstName()}','{self.getLastName()}')'''
             print(sql)
-            self.customerId = self.cafe.dbPutData(sql)
+            self.customerId = self.dbPutData(sql)
             # self.setCustomerID(self.dbPutData(sql))
 
     def exitCustomer(self):
@@ -94,7 +94,7 @@ class tenOutOfTenCustomer(SPXCafe):
                 WHERE userName = '{self.getUserName()}'
                 ORDER BY customerId
                 '''
-        customerData = self.cafe.dbGetData(sql)
+        customerData = self.dbGetData(sql)
         if customerData:
             #Eiting customer = should only be one customer
             for customer in customerData:
