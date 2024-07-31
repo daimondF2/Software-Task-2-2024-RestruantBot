@@ -23,10 +23,12 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.SuperWaiter.introduce()
         self.nlp = NLPdemo()
         self.callMenu = Menu()
+        self.mealInfo = Meal.Meal()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
         self.customer = tenOutOfTenCustomer()
-        if self.customer.getCusotmerNewOrReturning(): #if true get request else move to signup
+        # if self.customer.getCusotmerNewOrReturning(): #if true get request else move to signup
+        if self.customer.greetings():
             self.getRequest()
 
 
@@ -39,7 +41,8 @@ class tenOutOfTenRestaurant(SPXCafe):
         #self.options() # Need to setup options for the customer
     def menu(self):
         '''displays the menu'''
-        request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
+        # request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
+        request = input("menu, course, find a meal")
         # ask for what they would like to see
         self.callMenu.setMenuName("TenOutOfTen") 
         if request == "menu":
@@ -48,7 +51,17 @@ class tenOutOfTenRestaurant(SPXCafe):
             self.callMenu.displayCourses()
             # ask for what course
         elif request == "find a meal":
-            self.callMenu.findMeal()
+            # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
+            searchMeal = input("what meal you want to find")
+            # find meal in a course
+            if self.mealInfo.isMatch(searchMeal):
+                print('match')
+            else:
+                print("not matched")
+            foundMeal = self.mealInfo.findMeal(searchMeal)
+            if foundMeal:
+                foundMeal.display()
+            
         else:
             self.getRequest()
         # just to show the type of food that can be bought
@@ -62,7 +75,6 @@ class tenOutOfTenRestaurant(SPXCafe):
 # You must be able to allow the customer to request a description of the menus for 3 different courses – e.g. starter, main and dessert
 # They may see the dishes for one course only or for all courses
 # You must include a price for each dish in that course
-
 
     def getFoodOrder(self):
         self.Order
@@ -97,7 +109,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         else:
             return False
 def main():
-    test = tenOutOfTenRestraunt()
+    test = tenOutOfTenRestaurant()
 
 if __name__=="__main__":
     main()        

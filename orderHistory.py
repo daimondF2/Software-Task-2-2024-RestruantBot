@@ -19,10 +19,23 @@ class orderHistor(SPXCafe):
             sql = f'''SELECT orderId, orderDate, customerId 
             FROM Orders 
             WHERE customerId = '{self.customerInfo.getCustomerId()}'
+            ORDER BY orderId
             '''
             print(sql)
-        if sql:
             orderHSdata = self.dbGetData(sql)
+        if orderHSdata:
+            for orders in orderHSdata:
+                self.orderId =
+                self.userName = customer['userName']
+                self.firstName = customer['firstName']
+                # Call ORDER factory method to return a list of order objects/instances - pass self to it
+                # self.setORders(Order.getORders(self))
+                retcode = True
+        self.setFirstName(self.firstName)
+        self.setLastName(self.lastName)
+        self.setCustomerId(self.customerId)
+
+            
             print(orderHSdata)
     # You must be able to allow the customer to access their previous orders, including
     # Order number

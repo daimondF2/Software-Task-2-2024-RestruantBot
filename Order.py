@@ -20,7 +20,8 @@ class orders(SPXCafe):
 # They may continue ordering or finish ordering
 # During the order process, the customer should be able to request to access the menu again or abandon the order.
     def getOrders(self):
-        pass
+        sql = None
+        
 
     def checkOut(self):
         pass
