@@ -3,7 +3,7 @@ from Avatar2 import Avatar
 class orders(SPXCafe):
     def __init__(self):
         super().__init__
-        self.SuperBot = Avatar("tenOutOfTenRestraunt Bot")
+        self.SuperBot = Avatar("tenOutOfTenRestaurant Bot")
     def databaseAccess(self):
         pass
     

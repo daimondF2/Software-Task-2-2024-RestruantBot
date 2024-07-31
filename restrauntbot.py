@@ -15,11 +15,11 @@ import Meal
 from Course import Course
 from restrauntCustomer import tenOutOfTenCustomer
 
-class tenOutOfTenRestraunt(SPXCafe):
+class tenOutOfTenRestaurant(SPXCafe):
     def __init__(self):
         '''Constructor method'''
         super().__init__()
-        self.SuperWaiter = Avatar("tenOutOfTenRestraunt Bot") #
+        self.SuperWaiter = Avatar("tenOutOfTenRestaurant Bot") #
         self.SuperWaiter.introduce()
         self.nlp = NLPdemo()
         self.callMenu = Menu()
