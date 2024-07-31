@@ -11,18 +11,19 @@ class tenOutOfTenCustomer(SPXCafe):
         '''login or signup options'''
         #inpNewOrReturning = self.SuperWaiter.listen("Please say Login if you want to Login, say sign up if you are new")
         while True:
-            self.SuperWaiter.say("Do you want to enter or 'Exit' ")
-            inpNewOrReturning = input("Do you want to 'enter' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
-            if inpNewOrReturning == "enter":
-                return self.getCusotmerLoginOrSignUp()
+            self.SuperWaiter.say("Do you want to Order or 'Exit' ")
+            inpNewOrReturning = input("Do you want to 'Order' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
+            if inpNewOrReturning == "order":
+                return self.getCusotmerNewOrReturning()
             elif inpNewOrReturning == "exit":
                 return self.exitCustomer()
             else:
                 self.SuperWaiter.say("Please try again")
 
-    def getCusotmerLoginOrSignUp(self):
+    def getCusotmerNewOrReturning(self):
         '''login or signup'''
         signedUp = False
+        self.greetings()
         self.SuperWaiter.say("Please enter your username: ")
         userName = input("Please enter your username: ").lower() # for accuracy
         self.setUserName(userName) # sets username
