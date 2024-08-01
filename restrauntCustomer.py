@@ -83,8 +83,9 @@ class tenOutOfTenCustomer(SPXCafe):
             # self.setCustomerID(self.dbPutData(sql))
 
     def newOrder(self, basket=None):
-        if basket:
-            order = Order.orders(customer=self)
+        if basket == True:
+            self.order = Order.orders(customer=self)
+            self.order.createOrder(customerId=self.getCustomerId())
         else:
             return False
 
@@ -146,10 +147,7 @@ def main():
     '''test harness'''
     customer= tenOutOfTenCustomer()
     customer.getCusotmerNewOrReturning()
-    print(customer.getCustomerId())
-    print(customer.getFirstName())
-    print(customer.getLastName())
-    print(customer.getUserName())
+    customer.newOrder()
 if __name__=="__main__":
     main()
 # Notes

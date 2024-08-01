@@ -4,14 +4,14 @@ class orderHistor(SPXCafe):
     def __init__(self):
         super().__init__()
         self.customerInfo = tenOutOfTenCustomer()
+        self.SuperCustomer
         self.getToday()
         # orderDate = datetime.today().strftime("%Y-%m-%d")
         self.addOrders()
 
-
-
     def addOrders(self):
         # adds orders to order history
+        self.
         pass
     def seeOrderHistory(self):
         sql =None
@@ -25,9 +25,9 @@ class orderHistor(SPXCafe):
             orderHSdata = self.dbGetData(sql)
         if orderHSdata:
             for orders in orderHSdata:
-                self.orderId =
-                self.userName = customer['userName']
-                self.firstName = customer['firstName']
+                # self.orderId =
+                # self.userName = customer['userName']
+                # self.firstName = customer['firstName']
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
                 # self.setORders(Order.getORders(self))
                 retcode = True

@@ -37,6 +37,7 @@ class tenOutOfTenRestaurant(SPXCafe):
     '''TO DO'''
     # add database access
     # CREATE ORDER HISTORY IN DATBASE AND FILE
+    # 
     # ADD OPTIONS
     # ADD OTHER things LIKE TIME TO DATABASE
     # add fuzzy logic
@@ -88,11 +89,13 @@ class tenOutOfTenRestaurant(SPXCafe):
 # You must include a price for each dish in that course
 
     def getFoodOrder(self):
-        order = self.customer.newOrder(basket=True)
-        if order:
-            self.getRequest()
-        else:
-            print("done")
+        self.SuperWaiter.listen("What do you want to order?")
+        basket= True
+        self.customer.newOrder(basket)
+        # if self.order == False:
+        #     self.getRequest()
+        # else:
+        #     print("done")
 
     def orderHistory(self):
         self.order
@@ -114,6 +117,20 @@ class tenOutOfTenRestaurant(SPXCafe):
         if option == "Exit":
             self.exit()
         # keywords = 
+    def match(self):
+        self.exitRequest =      {
+                "keywords":      ["exit","leave","bye"],
+                "response":      "leave us now"
+        }
+        self.historyRequest =   {
+                "keywords":     ["history", "previous"],
+                "response":     "see your previous orders"
+        }
+        # self.exitRequest =      [["exit","leave","bye"],                            "leave us now"]
+        self.historyRequest =   [["history", "previous"],                           "see your previous orders"]
+        self.menuRequest =      [["menu", "course", "meal","choice","options"],     "see the menu"]
+        self.orderRequest =     [["order", "buy","food"],                           "order some food"]
+        self.mainOptions = self.exitRequest["keywords"] + self.historyRequest[0] + self.menuRequest[0] + self.orderRequest[0]
 
     def isMatch(self, courseName= None):
         '''To edit fuzzy''' # To do later

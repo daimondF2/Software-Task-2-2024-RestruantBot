@@ -3,7 +3,7 @@ from Avatar2 import Avatar
 import restrauntCustomer
 class orders(SPXCafe):
     def __init__(self, orderId=None, orderDate=None, customer=None):
-        super().__init__
+        super().__init__()
         self.SuperBot = Avatar("tenOutOfTenRestaurant Bot")
         self.customerInfo = restrauntCustomer.tenOutOfTenCustomer()
         self.setCustomer(customer)
@@ -32,13 +32,20 @@ class orders(SPXCafe):
             WHERE customerId = '{self.customerInfo.getCustomerId()}'
             ORDER BY orderId
             '''
-    def createOrder(self):
+            self.dbGetData(sql)
+    def createOrder(self, customerId=None):
         '''creates order area'''
         sql = None
-        sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.__orderDate, self.__customer.getCustomerId()}')
+
+        print(self.__orderDate, customerId)
+        sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.__orderDate}','{customerId}')
             '''
         print(sql)
-        self.paperlist = self.dbPutData(sql)
+        self.dbPutData(sql)
+    
+    def setOrder(self):
+        sql = None
+        sql = ''''''
         
 
     def checkOut(self):
