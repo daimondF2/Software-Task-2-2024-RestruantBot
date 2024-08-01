@@ -36,7 +36,7 @@ class orderHistor(SPXCafe):
         self.setCustomerId(self.customerId)
 
             
-            print(orderHSdata)
+        print(orderHSdata)
     # You must be able to allow the customer to access their previous orders, including
     # Order number
     # Order Date

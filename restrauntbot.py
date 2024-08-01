@@ -54,15 +54,24 @@ class tenOutOfTenRestaurant(SPXCafe):
             # ask for what course
         elif request == "find a meal":
             # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
-            searchMeal = input("what meal you want to find")
-            # find meal in a course
-            if self.mealInfo.isMatch(searchMeal):
-                print('match')
+            searchMeal = input("what meal you want to find: ")
+            # find all meals
+            meals = self.callMenu.findMeal(searchMeal)
+            if meals:
+                for course in meals:
+                    for meal in course:
+                        meal.display()
             else:
-                print("not matched")
-            foundMeal = self.mealInfo.findMeal(searchMeal)
-            if foundMeal:
-                foundMeal.display()
+                print(f"{searchMeal}' not found")
+            # find meal in a course
+            # if self.mealInfo.isMatch(searchMeal):
+            #     print('match')
+
+            # else:
+            #     print("not matched")
+            # foundMeal = self.mealInfo.findMeal(searchMeal)
+            # if foundMeal:
+            #     foundMeal.display()
             
         else:
             self.getRequest()
@@ -79,7 +88,11 @@ class tenOutOfTenRestaurant(SPXCafe):
 # You must include a price for each dish in that course
 
     def getFoodOrder(self):
-        order = Order.orders().createOrder(customer=tenOutOfTenCustomer)
+        order = self.customer.newOrder(basket=True)
+        if order:
+            self.getRequest()
+        else:
+            print("done")
 
     def orderHistory(self):
         self.order

@@ -82,11 +82,12 @@ class tenOutOfTenCustomer(SPXCafe):
             self.customerId = self.dbPutData(sql)
             # self.setCustomerID(self.dbPutData(sql))
 
-    def newOrder(self, basker=None):
-        order = Order.orders(customer=self)
-        
+    def newOrder(self, basket=None):
+        if basket:
+            order = Order.orders(customer=self)
+        else:
+            return False
 
-        
 
     def exitCustomer(self):
         print("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
