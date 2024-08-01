@@ -1,5 +1,6 @@
 from SPXCafe2 import SPXCafe
 from Avatar2 import Avatar
+import Order
 class tenOutOfTenCustomer(SPXCafe):
 
     def __init__(self):
@@ -39,7 +40,8 @@ class tenOutOfTenCustomer(SPXCafe):
             self.SuperWaiter.say("Please enter your last name: ")       
             lastName = input("Please enter your last name: ").lower()   # asks last name .lower()
             self.setLastName(lastName)                                  # sets last name
-            self.saveCustomer()                                         # adds users to database (saves)
+            self.saveCustomer() 
+            self.setCustomer()                                        # adds users to database (saves)
             self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
             signedUp = True # ends signup loop
         # print("Finished signup")
@@ -72,7 +74,7 @@ class tenOutOfTenCustomer(SPXCafe):
                 firstName = '{self.getFirstName()}',
                 lastName = '{self.getLastName()}'
             WHERE customerId={self.getCustomerId()}'''
-            self.cafe.dbChangeData(sql)
+            self.dbChangeData(sql)
         else:
             sql = f'''INSERT INTO customers (userName, firstName, lastName) VALUES
                 ('{self.getUserName()}','{self.getFirstName()}','{self.getLastName()}')'''
@@ -80,13 +82,19 @@ class tenOutOfTenCustomer(SPXCafe):
             self.customerId = self.dbPutData(sql)
             # self.setCustomerID(self.dbPutData(sql))
 
+    def newOrder(self, basker=None):
+        order = Order.orders(customer=self)
+        
+
+        
+
     def exitCustomer(self):
         print("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
         self.SuperWaiter.say("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
         return False
 
 # Getters/Setters
-    def setCustomer(self, userName= None, customerId = None): # will have to get customer Id
+    def setCustomer(self, userName= None): # will have to get customer Id
         '''use this to get customer id for orders !!!!!!  '''
         customerData = None
         if self.getUserName():
@@ -119,8 +127,8 @@ class tenOutOfTenCustomer(SPXCafe):
         self.__lastName= lastName
     def setUserName(self, userName= None):
         self.__userName= userName
-    def setCustomerId(self, customerId=None):
-        self.__customerId=customerId
+    def setCustomerId(self, customerId= None):
+        self.__customerId = customerId
     def getCustomerId(self):
         return self.__customerId  
     def getFirstName(self):
@@ -129,10 +137,14 @@ class tenOutOfTenCustomer(SPXCafe):
         return self.__lastName
     def getUserName(self):
         return self.__userName
+    
+
+
+
 def main():
     '''test harness'''
     customer= tenOutOfTenCustomer()
-    customer.getCusotmerLoginOrSignUp()
+    customer.getCusotmerNewOrReturning()
     print(customer.getCustomerId())
     print(customer.getFirstName())
     print(customer.getLastName())

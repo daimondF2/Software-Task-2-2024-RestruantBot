@@ -14,6 +14,7 @@ from menu import Menu
 import Meal
 from Course import Course
 from restrauntCustomer import tenOutOfTenCustomer
+import Order
 
 class tenOutOfTenRestaurant(SPXCafe):
     def __init__(self):
@@ -24,6 +25,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.nlp = NLPdemo()
         self.callMenu = Menu()
         self.mealInfo = Meal.Meal()
+        # self.orderInfo = orders()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
         self.customer = tenOutOfTenCustomer()
@@ -77,7 +79,7 @@ class tenOutOfTenRestaurant(SPXCafe):
 # You must include a price for each dish in that course
 
     def getFoodOrder(self):
-        self.Order
+        order = Order.orders().createOrder(customer=tenOutOfTenCustomer)
 
     def orderHistory(self):
         self.order
@@ -94,7 +96,7 @@ class tenOutOfTenRestaurant(SPXCafe):
             self.menu()
         if option == "order history":
             self.orderHistory()
-        if option == "Order":
+        if option == "order":
             self.getFoodOrder()
         if option == "Exit":
             self.exit()
