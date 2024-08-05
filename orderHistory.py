@@ -8,11 +8,7 @@ class orderHistory(SPXCafe):
         self.SuperCustomer = Avatar("tenOutOfTenRestaurant Bot")
         self.getToday()
         # orderDate = datetime.today().strftime("%Y-%m-%d")
-        self.addOrders()
-
-    def addOrders(self):
-        # adds orders to order history
-        pass
+        # self.addOrders()
 
     def findOrderHistory(self, customerId= None):
         sql =None
@@ -38,16 +34,11 @@ class orderHistory(SPXCafe):
                 print(self.getOrderId())
                 print(self.getOrderDates())
                 print(self.getCustomerId())
+                self.findOrderFood()
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
                 retcode = True
         
-            
         # print(orderHSdata)
-    # You must be able to allow the customer to access their previous orders, including
-    # Order number
-    # Order Date
-        pass
-
     def existDb(self):
         '''check if object already exists in datbase'''
         retcode = False
@@ -67,13 +58,43 @@ class orderHistory(SPXCafe):
         return retcode
 
     def displayOrderHistory(self):
-        pass
-    
+        print(f"orderId: {self.getOrderId()}| orderDate: {self.getOrderDates()} | customerId: {self.getCustomerId()}| mealId: {self.getMealId()}| quantity: {self.getQuantity()}")
+
+    def findOrderFood(self):
+        sql =None
+        sql = f'''SELECT orderItemId, orderId, mealId, quantity, mealPrice 
+            FROM orderItems 
+            WHERE orderId = '{self.getOrderId()}'
+            ORDER BY orderItemId
+            '''
+        orderData = self.dbGetData(sql)
+        for items in orderData:
+            self.orderItemId = items['orderItemId']
+            self.mealId = items['mealId']
+            self.quantity = items['quantity']
+            self.mealPrice = items['mealPrice']
+            self.setOrderItemId(self.orderItemId)
+            self.setMealId(self.mealId)
+            self.setQuantity(self.quantity)
+            self.displayOrderHistory()
+
     # For Previous Order
 # The Meals/Dishes ordered and their prices (at that point in time)
 # Total order value
 
 # getters/ setters
+    def setOrderItemId(self, orderItemId=None):
+        self.__orderItemId = orderItemId
+    def getOrderItemId(self):
+        return self.__orderItemId
+    def setMealId(self, mealId = None):
+        self.__mealId = mealId
+    def getMealId(self):
+        return self.__mealId
+    def setQuantity(self, quantity=None):
+        self.__quantity= quantity
+    def getQuantity(self):
+        return self.__quantity
     def setOrderId(self, orderId=None):
         self.__orderId = orderId
     def getOrderId(self):
