@@ -9,9 +9,13 @@ class orders(SPXCafe):
         self.setCustomer(customer)
         self.__orderDate = self.getToday()
 
-    def databaseAccess(self):
+
+    def askOrder(self):
+        # asks for stuff right for fuzzy
         pass
-    
+    def findOrder(self):
+        pass
+
     def orderFood(self):
         return True
         # For Ordering Food
@@ -24,15 +28,7 @@ class orders(SPXCafe):
 # If 3 or more dishes ordered,
 # They may continue ordering or finish ordering
 # During the order process, the customer should be able to request to access the menu again or abandon the order.
-    def getOrders(self):
-        sql = None
-        if self.customerInfo.getCustomerId():
-            sql = f'''SELECT orderId, orderItemId, customerId 
-            FROM orderItems
-            WHERE customerId = '{self.customerInfo.getCustomerId()}'
-            ORDER BY orderId
-            '''
-            self.dbGetData(sql)
+
     def createOrder(self, customerId=None):
         '''creates order area'''
         sql = None
@@ -42,11 +38,6 @@ class orders(SPXCafe):
             '''
         print(sql)
         self.dbPutData(sql)
-    
-    def setOrder(self):
-        sql = None
-        sql = ''''''
-        
 
     def checkOut(self):
         pass
@@ -71,6 +62,21 @@ class orders(SPXCafe):
         if rq==False:
             sql = f"DELETE FROM orderItems WHERE orderId={self.getOrderId()}"
             self.dbChangeData(sql)
+
+######## getters/setters ##############
+    def getOrders(self):
+        sql = None
+        if self.customerInfo.getCustomerId():
+            sql = f'''SELECT orderId, orderItemId, customerId 
+            FROM orderItems
+            WHERE customerId = '{self.customerInfo.getCustomerId()}'
+            ORDER BY orderId
+            '''
+            self.dbGetData(sql)
+
+    def setOrder(self):
+        sql = None
+        sql = ''''''
 
     def setOrderId(self, orderId):
         self.__orderId = orderId

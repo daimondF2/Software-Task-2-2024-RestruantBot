@@ -83,6 +83,7 @@ class tenOutOfTenCustomer(SPXCafe):
             # self.setCustomerID(self.dbPutData(sql))
 
     def newOrder(self, basket=None):
+        '''connects to orders to create order'''
         if basket == True:
             self.order = Order.orders(customer=self)
             self.order.createOrder(customerId=self.getCustomerId())
@@ -91,12 +92,13 @@ class tenOutOfTenCustomer(SPXCafe):
 
 
     def exitCustomer(self):
+        '''customer exit'''
         print("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
         self.SuperWaiter.say("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
         return False
 
 # Getters/Setters
-    def setCustomer(self, userName= None): # will have to get customer Id
+    def setCustomer(self): # will have to get customer Id
         '''use this to get customer id for orders !!!!!!  '''
         customerData = None
         if self.getUserName():
@@ -140,8 +142,6 @@ class tenOutOfTenCustomer(SPXCafe):
     def getUserName(self):
         return self.__userName
     
-
-
 
 def main():
     '''test harness'''

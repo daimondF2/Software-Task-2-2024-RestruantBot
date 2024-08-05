@@ -1,5 +1,3 @@
-#You are to create a Restaurant Online Take Away Ordering Service 
-#Chat Bot named by the type of food your restaurant serves
 # Interact with the Customer to
 # View order history
 # View Menus
@@ -28,13 +26,13 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.callMenu = Menu()
         self.mealInfo = Meal.Meal()
         self.match()
-        # self.orderInfo = orders()
+        self.orderInfo = Order.orders()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
-        # self.customer = tenOutOfTenCustomer()
-        # # if self.customer.getCusotmerNewOrReturning(): #if true get request else move to signup
-        # if self.customer.greetings():
-        #     self.getRequest()
+        self.customer = tenOutOfTenCustomer()
+        # if self.customer.getCusotmerNewOrReturning(): #if true get request else move to signup
+        if self.customer.greetings():
+            self.getRequest()
     '''TO DO'''
     # add database access
     # CREATE ORDER HISTORY IN DATBASE AND FILE
@@ -43,6 +41,9 @@ class tenOutOfTenRestaurant(SPXCafe):
     # ADD OTHER things LIKE TIME TO DATABASE
     # add fuzzy logic
         #self.options() # Need to setup options for the customer
+
+# REQUESTS AND FUNCITION
+
     def runMenu(self):
         '''displays the menu'''
         # request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
@@ -70,13 +71,11 @@ class tenOutOfTenRestaurant(SPXCafe):
             # find meal in a course
             # if self.mealInfo.isMatch(searchMeal):
             #     print('match')
-
             # else:
             #     print("not matched")
             # foundMeal = self.mealInfo.findMeal(searchMeal)
             # if foundMeal:
-            #     foundMeal.display()
-            
+            #     foundMeal.display()      
         else:
             self.getRequest()
         # just to show the type of food that can be bought
@@ -89,53 +88,22 @@ class tenOutOfTenRestaurant(SPXCafe):
 # They may see the dishes for one course only or for all courses
 # You must include a price for each dish in that course
 
-    def getFoodOrder(self):
-        self.SuperWaiter.listen("What do you want to order?")
-        # find the meal then add to basket
-        # get meal
-        basket= True
-        self.customer.newOrder(basket)
-        # if self.order == False:
-        #     self.getRequest()
-        # else:
-        #     print("done")
-
     def orderHistory(self):
         self.order
     def exit(self):
         print("Thank you for coming to our thing")
 
-    # Getters/ setters
-
-    def getRequest(self):
-        option = self.SuperWaiter.listen("What would you like to do?", useSR=False)
-        # option = self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
-        # option = ("Menu, order history, order, exit").lower()
-        # if option == "menu":
-        #     self.menu()
-        # if option == "order history":
-        #     self.orderHistory()
-        # if option == "order":
-        #     self.getFoodOrder()
-        # if option == "Exit":
-        #     self.exit()
-        # choice = self.getOptions(option, self.mainOptions)
-
-        choice = self.getOptions(option, self.mainOptions)
-        if choice in self.exitRequest["keywords"]:
-            response = self.exitRequest["response"]
-        elif choice in self.historyRequest[0]:
-            response = self.historyRequest[1]
-        elif choice in self.menuRequest[0]:
-            response = self.menuRequest[1]
-        elif choice in self.orderRequest[0]:
-            response = self.orderRequest[1]
+    def isMatch(self, request= None):
+        '''To match and gain confidence in words''' # To do later
+        confidence = partial_ratio(request, self.match()) # to edit
+        # print(courseName, self.getCourseName(), confidence)
+        if confidence >80:
+            return True
         else:
-            self.SuperWaiter.say(f"I am sorry, I don't understand your choice. You said: '{option}. Please try again.")
-        self.SuperWaiter.say(f"Right, You chose to {response}.")
-        return choice
-
+            return False
+        
     def match(self):
+        '''Key words for requests'''
         self.exitRequest =      {
                 "keywords":      ["exit","leave","bye"],
                 "response":      "leave us now"
@@ -150,14 +118,63 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.orderRequest =     [["order", "buy","food"],                           "order some food"]
         self.mainOptions = self.exitRequest["keywords"] + self.historyRequest[0] + self.menuRequest[0] + self.orderRequest[0]
 
-    def isMatch(self, request= None):
-        '''To edit fuzzy''' # To do later
-        confidence = partial_ratio(request, self.match()) # to edit
-        # print(courseName, self.getCourseName(), confidence)
-        if confidence >80:
-            return True
+
+    def options(self):
+        '''sends customer to chosen area'''
+        choice = self.getRequest()
+        print(choice)
+
+        if choice in self.exitRequest["keywords"]:
+            self.exit()
+            running = False
+
+        elif choice in self.historyRequest[0]:
+            self.orderHistory()
+        elif choice in self.menuRequest[0]:
+            self.runMenu()
+        elif choice in self.orderRequest[0]:
+            self.getFoodOrder()
+
+############ Getters/ setters ##############
+    def getFoodOrder(self):
+        '''gets food orders'''
+        self.SuperWaiter.listen("What do you want to order?")
+        # find the meal then add to basket
+        # get meal
+        basket= True
+        self.customer.newOrder(basket)
+        # if self.order == False:
+        #     self.getRequest()
+        # else:
+        #     print("done")
+
+    def getRequest(self):
+        '''gets customer Request'''
+        option = self.SuperWaiter.listen("What would you like to do?", useSR=False)
+        # option = self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
+        # option = ("Menu, order history, order, exit").lower()
+        # if option == "menu":
+        #     self.menu()
+        # if option == "order history":
+        #     self.orderHistory()
+        # if option == "order":
+        #     self.getFoodOrder()
+        # if option == "Exit":
+        #     self.exit()
+        # choice = self.getOptions(option, self.mainOptions)
+        choice = self.getOptions(option, self.mainOptions)
+        if choice in self.exitRequest["keywords"]:
+            response = self.exitRequest["response"]
+        elif choice in self.historyRequest[0]:
+            response = self.historyRequest[1]
+        elif choice in self.menuRequest[0]:
+            response = self.menuRequest[1]
+        elif choice in self.orderRequest[0]:
+            response = self.orderRequest[1]
         else:
-            return False
+            self.SuperWaiter.say(f"I am sorry, I don't understand your choice. You said: '{option}. Please try again.")
+        self.SuperWaiter.say(f"Right, You chose to {response}.")
+        return choice
           
     def getOptions(self, choice=None, options=None):    
         '''Chooose from a list of options'''
@@ -185,22 +202,6 @@ class tenOutOfTenRestaurant(SPXCafe):
             #     matches = []
             #     maxConfidence = 0
         return matches[0] if len(matches)>0 else []
-    
-    def options(self):
-        choice = self.getRequest()
-        print(choice)
-
-        if choice in self.exitRequest["keywords"]:
-            self.exit()
-            running = False
-
-        elif choice in self.historyRequest[0]:
-            self.orderHistory()
-        elif choice in self.menuRequest[0]:
-            self.runMenu()
-        elif choice in self.orderRequest[0]:
-            self.getFoodOrder()
-
 
 def main():
     test = tenOutOfTenRestaurant()
