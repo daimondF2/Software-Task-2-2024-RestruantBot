@@ -10,6 +10,8 @@ from NLPdemo import NLPdemo
 from SPXCafe2 import SPXCafe
 from rapidfuzz import fuzz, process
 from rapidfuzz.fuzz import partial_ratio
+from rapidfuzz.process import extract
+from rapidfuzz.utils import default_process
 from menu import Menu
 import Meal
 from Course import Course
@@ -25,15 +27,14 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.nlp = NLPdemo()
         self.callMenu = Menu()
         self.mealInfo = Meal.Meal()
+        self.match()
         # self.orderInfo = orders()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
-        self.customer = tenOutOfTenCustomer()
-        # if self.customer.getCusotmerNewOrReturning(): #if true get request else move to signup
-        if self.customer.greetings():
-            self.getRequest()
-
-
+        # self.customer = tenOutOfTenCustomer()
+        # # if self.customer.getCusotmerNewOrReturning(): #if true get request else move to signup
+        # if self.customer.greetings():
+        #     self.getRequest()
     '''TO DO'''
     # add database access
     # CREATE ORDER HISTORY IN DATBASE AND FILE
@@ -42,17 +43,19 @@ class tenOutOfTenRestaurant(SPXCafe):
     # ADD OTHER things LIKE TIME TO DATABASE
     # add fuzzy logic
         #self.options() # Need to setup options for the customer
-    def menu(self):
+    def runMenu(self):
         '''displays the menu'''
         # request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
         request = input("menu, course, find a meal")
         # ask for what they would like to see
-        self.callMenu.setMenuName("TenOutOfTen") 
+        self.callMenu.setMenuName("TenOutOfTen") # build fuzzy
         if request == "menu":
             self.callMenu.display()
         elif request == "course":
             self.callMenu.displayCourses()
-            # ask for what course
+            # ask for what course or go back # to go back call a function that recalls the function
+            # 
+
         elif request == "find a meal":
             # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
             searchMeal = input("what meal you want to find: ")
@@ -77,19 +80,19 @@ class tenOutOfTenRestaurant(SPXCafe):
         else:
             self.getRequest()
         # just to show the type of food that can be bought
-        # if whole menu 
         # if certain thing like see courses
         # ask for food 
         # make a match case senario using fuzzy logic where the waiter listens
         # to what the customer wants
 
         # For Menu
-# You must be able to allow the customer to request a description of the menus for 3 different courses – e.g. starter, main and dessert
 # They may see the dishes for one course only or for all courses
 # You must include a price for each dish in that course
 
     def getFoodOrder(self):
         self.SuperWaiter.listen("What do you want to order?")
+        # find the meal then add to basket
+        # get meal
         basket= True
         self.customer.newOrder(basket)
         # if self.order == False:
@@ -105,18 +108,33 @@ class tenOutOfTenRestaurant(SPXCafe):
     # Getters/ setters
 
     def getRequest(self):
-        self.SuperWaiter.say("What would you like to do?")
+        option = self.SuperWaiter.listen("What would you like to do?", useSR=False)
         # option = self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
-        option = input("Menu, order history, order, exit").lower()
-        if option == "menu":
-            self.menu()
-        if option == "order history":
-            self.orderHistory()
-        if option == "order":
-            self.getFoodOrder()
-        if option == "Exit":
-            self.exit()
-        # keywords = 
+        # option = ("Menu, order history, order, exit").lower()
+        # if option == "menu":
+        #     self.menu()
+        # if option == "order history":
+        #     self.orderHistory()
+        # if option == "order":
+        #     self.getFoodOrder()
+        # if option == "Exit":
+        #     self.exit()
+        # choice = self.getOptions(option, self.mainOptions)
+
+        choice = self.getOptions(option, self.mainOptions)
+        if choice in self.exitRequest["keywords"]:
+            response = self.exitRequest["response"]
+        elif choice in self.historyRequest[0]:
+            response = self.historyRequest[1]
+        elif choice in self.menuRequest[0]:
+            response = self.menuRequest[1]
+        elif choice in self.orderRequest[0]:
+            response = self.orderRequest[1]
+        else:
+            self.SuperWaiter.say(f"I am sorry, I don't understand your choice. You said: '{option}. Please try again.")
+        self.SuperWaiter.say(f"Right, You chose to {response}.")
+        return choice
+
     def match(self):
         self.exitRequest =      {
                 "keywords":      ["exit","leave","bye"],
@@ -132,16 +150,61 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.orderRequest =     [["order", "buy","food"],                           "order some food"]
         self.mainOptions = self.exitRequest["keywords"] + self.historyRequest[0] + self.menuRequest[0] + self.orderRequest[0]
 
-    def isMatch(self, courseName= None):
+    def isMatch(self, request= None):
         '''To edit fuzzy''' # To do later
-        # confidence = partial_ratio(courseName.lower(), self.getCourseName().lower()) # to edit
+        confidence = partial_ratio(request, self.match()) # to edit
         # print(courseName, self.getCourseName(), confidence)
         if confidence >80:
             return True
         else:
             return False
+          
+    def getOptions(self, choice=None, options=None):    
+        '''Chooose from a list of options'''
+        matches = []
+        maxConfidence= 0
+        while len(matches)==0:
+            if not choice:
+                choice = self.SuperWaiter.listen().strip().lower()
+                if not choice:
+                    break
+            
+            results = extract(choice, options, scorer=partial_ratio, processor=default_process)
+            for result in results:
+                (match, confidence, index) = result
+                print(f"Checking: {result}")
+                if confidence > maxConfidence:
+                    maxConfidence = confidence
+                    matches = [match]
+                elif confidence == maxConfidence:
+                    matches.append(match)
+            print(f" You have matched: {','.join(matches)} with confidence level {maxConfidence}% {len(matches)}")
+            # if len(matches)>1:
+            #     print("Sorry, you need to choose only one! Try again")
+            #     options = matches
+            #     matches = []
+            #     maxConfidence = 0
+        return matches[0] if len(matches)>0 else []
+    
+    def options(self):
+        choice = self.getRequest()
+        print(choice)
+
+        if choice in self.exitRequest["keywords"]:
+            self.exit()
+            running = False
+
+        elif choice in self.historyRequest[0]:
+            self.orderHistory()
+        elif choice in self.menuRequest[0]:
+            self.runMenu()
+        elif choice in self.orderRequest[0]:
+            self.getFoodOrder()
+
+
 def main():
     test = tenOutOfTenRestaurant()
+    test.options()
 
 if __name__=="__main__":
     main()        
