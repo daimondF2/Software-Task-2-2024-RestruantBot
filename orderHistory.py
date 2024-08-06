@@ -1,28 +1,26 @@
 from SPXCafe2 import SPXCafe
-from restrauntCustomer import tenOutOfTenCustomer
 from Avatar2 import Avatar
 class orderHistory(SPXCafe):
     def __init__(self):
+        '''Constructor '''
         super().__init__()
-        self.customerInfo = tenOutOfTenCustomer()
         self.SuperCustomer = Avatar("tenOutOfTenRestaurant Bot")
         self.getToday()
-        # orderDate = datetime.today().strftime("%Y-%m-%d")
-        # self.addOrders()
+        self.totalPrice = 0
+        print("---------------------- Past Orders ----------------------")
 
-    def findOrderHistory(self, customerId= None):
+    def findOrderHistory(self, customerId=None):
+        '''gets order ids and all orders made by customer'''
         sql =None
-        h= True
-        # if self.customerInfo.getCustomerId():
-        if h ==True:
+        if customerId:
             sql = f'''SELECT orderId, orderDate, customerId 
             FROM Orders 
             WHERE customerId = '{customerId}'
             ORDER BY orderId
             '''
-            print(sql)
+            # print(sql)
             orderHSdata = self.dbGetData(sql)
-            print(orderHSdata)
+            # print(orderHSdata)
         if orderHSdata:
             for orders in orderHSdata:
                 self.orderId = orders['orderId']
@@ -31,14 +29,13 @@ class orderHistory(SPXCafe):
                 self.setOrderId(self.orderId)
                 self.setOrderDates(self.orderDate)
                 self.setCustomerId(self.customerId)
-                print(self.getOrderId())
-                print(self.getOrderDates())
-                print(self.getCustomerId())
+                # print(self.getOrderId())
+                # print(self.getOrderDates())           checks if they worked
+                # print(self.getCustomerId())
                 self.findOrderFood()
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
-                retcode = True
+        print(f"| Total price: {self.totalPrice} |") # displays total cost
         
-        # print(orderHSdata)
     def existDb(self):
         '''check if object already exists in datbase'''
         retcode = False
@@ -58,9 +55,11 @@ class orderHistory(SPXCafe):
         return retcode
 
     def displayOrderHistory(self):
-        print(f"orderId: {self.getOrderId()}| orderDate: {self.getOrderDates()} | customerId: {self.getCustomerId()}| mealId: {self.getMealId()}| quantity: {self.getQuantity()}")
+        # print(f"orderId: {self.getOrderId()}| orderDate: {self.getOrderDates()} | customerId: {self.getCustomerId()}| mealId: {self.getMealId()}| quantity: {self.getQuantity()}| meal: {self.__mealName}| price: {self.__mealPrice}")
+        print(f"| orderDate: {self.getOrderDates()} | meal: {self.__mealName} | quantity: {self.getQuantity()} |  price: {self.__mealPrice} |")
 
     def findOrderFood(self):
+        '''Finds the orders from orderId'''
         sql =None
         sql = f'''SELECT orderItemId, orderId, mealId, quantity, mealPrice 
             FROM orderItems 
@@ -72,29 +71,39 @@ class orderHistory(SPXCafe):
             self.orderItemId = items['orderItemId']
             self.mealId = items['mealId']
             self.quantity = items['quantity']
-            self.mealPrice = items['mealPrice']
+            self.__mealPrice = items['mealPrice']
             self.setOrderItemId(self.orderItemId)
-            self.setMealId(self.mealId)
             self.setQuantity(self.quantity)
+            self.setMealId(self.mealId)
+            self.totalPrice += int(self.getQuantity())*int(self.__mealPrice) # gets total price of meal
+            # print(f"total price: {self.totalPrice}")
+            self.findFood()
+    def findFood(self):
+        '''gets the meal name form mealId'''
+        sql = None
+        sql = f'''SELECT mealId, mealName, mealPrice, courseId 
+            FROM meals 
+            WHERE mealId = '{self.getMealId()}'
+            ORDER BY mealId
+            '''
+        mealData = self.dbGetData(sql)
+        for meals in mealData:
+            self.__mealName = meals['mealName']
             self.displayOrderHistory()
-
-    # For Previous Order
-# The Meals/Dishes ordered and their prices (at that point in time)
-# Total order value
 
 # getters/ setters
     def setOrderItemId(self, orderItemId=None):
         self.__orderItemId = orderItemId
     def getOrderItemId(self):
         return self.__orderItemId
-    def setMealId(self, mealId = None):
-        self.__mealId = mealId
-    def getMealId(self):
-        return self.__mealId
     def setQuantity(self, quantity=None):
         self.__quantity= quantity
     def getQuantity(self):
         return self.__quantity
+    def setMealId(self, mealId=None):
+        self.__mealId = mealId
+    def getMealId(self):
+        return self.__mealId
     def setOrderId(self, orderId=None):
         self.__orderId = orderId
     def getOrderId(self):
@@ -109,6 +118,7 @@ class orderHistory(SPXCafe):
         return self.__customerId
     
 def main():
+    '''test harness'''
     orderHs= orderHistory()
     orderHs.findOrderHistory(customerId=1)
 if __name__ == "__main__":
