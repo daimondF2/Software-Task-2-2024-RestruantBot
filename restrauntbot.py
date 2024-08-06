@@ -6,16 +6,14 @@
 from Avatar2 import Avatar
 from NLPdemo import NLPdemo
 from SPXCafe2 import SPXCafe
-from rapidfuzz import fuzz, process
 from rapidfuzz.fuzz import partial_ratio
 from rapidfuzz.process import extract
 from rapidfuzz.utils import default_process
-from menu import Menu
+import menu
 import Meal
 from Course import Course
-from restrauntCustomer import tenOutOfTenCustomer
+import restrauntCustomer
 import Order
-
 class tenOutOfTenRestaurant(SPXCafe):
     def __init__(self):
         '''Constructor method'''
@@ -23,16 +21,16 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.SuperWaiter = Avatar("tenOutOfTenRestaurant Bot") #
         self.SuperWaiter.introduce()
         self.nlp = NLPdemo()
-        self.callMenu = Menu()
+        self.callMenu = menu.Menu()
         self.mealInfo = Meal.Meal()
         self.match()
         self.orderInfo = Order.orders()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
-        self.customer = tenOutOfTenCustomer()
+        self.customer = restrauntCustomer.tenOutOfTenCustomer()
         # if self.customer.getCusotmerNewOrReturning(): #if true get request else move to signup
         if self.customer.greetings():
-            self.getRequest()
+            self.options()
     '''TO DO'''
     # add database access
     # CREATE ORDER HISTORY IN DATBASE AND FILE
@@ -49,35 +47,39 @@ class tenOutOfTenRestaurant(SPXCafe):
         # request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
         request = input("menu, course, find a meal")
         # ask for what they would like to see
-        self.callMenu.setMenuName("TenOutOfTen") # build fuzzy
-        if request == "menu":
-            self.callMenu.display()
-        elif request == "course":
-            self.callMenu.displayCourses()
-            # ask for what course or go back # to go back call a function that recalls the function
-            # 
-
-        elif request == "find a meal":
-            # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
-            searchMeal = input("what meal you want to find: ")
-            # find all meals
-            meals = self.callMenu.findMeal(searchMeal)
-            if meals:
-                for course in meals:
-                    for meal in course:
-                        meal.display()
+        running = True
+        while running:
+            self.callMenu.setMenuName("TenOutOfTen") # build fuzzy
+            if request == "menu":
+                self.callMenu.display()
+                running = False
+            elif request == "course":
+                self.callMenu.displayCourses()
+                running = False
+                # ask for what course or go back # to go back call a function that recalls the function
+            elif request == "find a meal":
+                # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
+                searchMeal = input("what meal you want to find: ")
+                # find all meals
+                meals = self.callMenu.findMeal(searchMeal)
+                if meals:
+                    for course in meals:
+                        for meal in course:
+                            meal.display()
+                    running = False
+                else:
+                    print(f"{searchMeal}' not found")
+                # find meal in a course
+                # if self.mealInfo.isMatch(searchMeal):
+                #     print('match')
+                # else:
+                #     print("not matched")
+                # foundMeal = self.mealInfo.findMeal(searchMeal)
+                # if foundMeal:
+                #     foundMeal.display()      
             else:
-                print(f"{searchMeal}' not found")
-            # find meal in a course
-            # if self.mealInfo.isMatch(searchMeal):
-            #     print('match')
-            # else:
-            #     print("not matched")
-            # foundMeal = self.mealInfo.findMeal(searchMeal)
-            # if foundMeal:
-            #     foundMeal.display()      
-        else:
-            self.getRequest()
+                running =False
+        self.options()
         # just to show the type of food that can be bought
         # if certain thing like see courses
         # ask for food 
@@ -89,7 +91,9 @@ class tenOutOfTenRestaurant(SPXCafe):
 # You must include a price for each dish in that course
 
     def orderHistory(self):
-        self.order
+        self.customer.history()
+        self.options()
+
     def exit(self):
         print("Thank you for coming to our thing")
 
@@ -125,15 +129,14 @@ class tenOutOfTenRestaurant(SPXCafe):
         print(choice)
 
         if choice in self.exitRequest["keywords"]:
-            self.exit()
+            return self.exit()
             running = False
-
         elif choice in self.historyRequest[0]:
-            self.orderHistory()
+            return self.orderHistory()
         elif choice in self.menuRequest[0]:
-            self.runMenu()
+            return self.runMenu()
         elif choice in self.orderRequest[0]:
-            self.getFoodOrder()
+            return self.getFoodOrder()
 
 ############ Getters/ setters ##############
     def getFoodOrder(self):
@@ -151,17 +154,6 @@ class tenOutOfTenRestaurant(SPXCafe):
     def getRequest(self):
         '''gets customer Request'''
         option = self.SuperWaiter.listen("What would you like to do?", useSR=False)
-        # option = self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
-        # option = ("Menu, order history, order, exit").lower()
-        # if option == "menu":
-        #     self.menu()
-        # if option == "order history":
-        #     self.orderHistory()
-        # if option == "order":
-        #     self.getFoodOrder()
-        # if option == "Exit":
-        #     self.exit()
-        # choice = self.getOptions(option, self.mainOptions)
         choice = self.getOptions(option, self.mainOptions)
         if choice in self.exitRequest["keywords"]:
             response = self.exitRequest["response"]

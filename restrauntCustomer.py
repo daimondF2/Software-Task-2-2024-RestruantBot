@@ -1,6 +1,7 @@
 from SPXCafe2 import SPXCafe
 from Avatar2 import Avatar
 import Order
+import orderHistory
 class tenOutOfTenCustomer(SPXCafe):
 
     def __init__(self):
@@ -30,7 +31,7 @@ class tenOutOfTenCustomer(SPXCafe):
         userName = input("Please enter your username: ").lower() # for accuracy
         self.setUserName(userName) # sets username
         if self.existsDBUserName(): # checks if username in database to prevent overlapping 
-            self.setCustomer(userName)
+            self.setCustomer()
             self.SuperWaiter.say(f"Welcome back to TenOutOfTenRestraunt by Cree gaming, {self.getFirstName()} {self.getLastName()}!")
             signedUp = True
         else:
@@ -59,7 +60,7 @@ class tenOutOfTenCustomer(SPXCafe):
             # print(countData)
             if countData:
                 for countRec in countData: 
-                    print(countRec)
+                    # print(countRec)
                     count  = int(countRec['count'])
                 if count >0:
                     retcode = True
@@ -89,6 +90,10 @@ class tenOutOfTenCustomer(SPXCafe):
             self.order.createOrder(customerId=self.getCustomerId())
         else:
             return False
+    def history(self):
+        '''connects to orderhistory to check history'''
+        self.orderHS = orderHistory.orderHistory()
+        self.orderHS.findOrderHistory(self.getCustomerId())
 
 
     def exitCustomer(self):
@@ -113,7 +118,6 @@ class tenOutOfTenCustomer(SPXCafe):
             #Eiting customer = should only be one customer
             for customer in customerData:
                 self.customerId = customer['customerId']         #grabs the customer data from database into a variable
-                self.userName = customer['userName']
                 self.firstName = customer['firstName']
                 self.lastName = customer['lastName']
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
