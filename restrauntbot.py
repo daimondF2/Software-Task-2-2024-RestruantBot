@@ -28,15 +28,12 @@ class tenOutOfTenRestaurant(SPXCafe):
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
         self.customer = restrauntCustomer.tenOutOfTenCustomer()
-        # if self.customer.getCusotmerNewOrReturning(): #if true get request else move to signup
-        if self.customer.greetings():
-            self.options()
+        # if self.customer.greetings():
+        #     self.options()
+
     '''TO DO'''
-    # add database access
-    # CREATE ORDER HISTORY IN DATBASE AND FILE
-    # 
-    # ADD OPTIONS
     # ADD OTHER things LIKE TIME TO DATABASE
+    # do order and menu(find meal)
     # add fuzzy logic
         #self.options() # Need to setup options for the customer
 
@@ -125,18 +122,29 @@ class tenOutOfTenRestaurant(SPXCafe):
 
     def options(self):
         '''sends customer to chosen area'''
-        choice = self.getRequest()
-        print(choice)
+        # choice = self.getRequest()
+        # print(choice)
 
-        if choice in self.exitRequest["keywords"]:
-            return self.exit()
-            running = False
-        elif choice in self.historyRequest[0]:
-            return self.orderHistory()
-        elif choice in self.menuRequest[0]:
-            return self.runMenu()
-        elif choice in self.orderRequest[0]:
-            return self.getFoodOrder()
+        # if choice in self.exitRequest["keywords"]:
+        #     return self.exit()
+        #     running = False
+        # elif choice in self.historyRequest[0]:
+        #     return self.orderHistory()
+        # elif choice in self.menuRequest[0]:
+        #     return self.runMenu()
+        # elif choice in self.orderRequest[0]:
+        #     return self.getFoodOrder()
+        option = self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
+        option = input("Menu, order history, order, exit: ").lower()
+        if option == "menu":
+            self.runMenu()
+        if option == "history":
+            self.orderHistory()
+        if option == "order":
+            self.getFoodOrder()
+        if option == "Exit":
+            self.exit()
+        choice = self.getOptions(option, self.mainOptions)
 
 ############ Getters/ setters ##############
     def getFoodOrder(self):
@@ -181,13 +189,13 @@ class tenOutOfTenRestaurant(SPXCafe):
             results = extract(choice, options, scorer=partial_ratio, processor=default_process)
             for result in results:
                 (match, confidence, index) = result
-                print(f"Checking: {result}")
+                # print(f"Checking: {result}")
                 if confidence > maxConfidence:
                     maxConfidence = confidence
                     matches = [match]
                 elif confidence == maxConfidence:
                     matches.append(match)
-            print(f" You have matched: {','.join(matches)} with confidence level {maxConfidence}% {len(matches)}")
+            # print(f" You have matched: {','.join(matches)} with confidence level {maxConfidence}% {len(matches)}")
             # if len(matches)>1:
             #     print("Sorry, you need to choose only one! Try again")
             #     options = matches
@@ -197,7 +205,7 @@ class tenOutOfTenRestaurant(SPXCafe):
 
 def main():
     test = tenOutOfTenRestaurant()
-    test.options()
+    test.runMenu()
 
 if __name__=="__main__":
     main()        

@@ -114,6 +114,9 @@ class orders(SPXCafe):
 
 
 # Make new Order Id and customer Id
+#ask for meal and orderItem
+# find meal then add to orderItem and give it orderId
+#repeat
 
 def main():
     o = orders()
