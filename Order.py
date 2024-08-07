@@ -22,6 +22,7 @@ class orders(SPXCafe):
                 print(meals)
 
 
+
     def orderFood(self):
         '''gets the order id by using order date'''
         sql = None
@@ -107,7 +108,10 @@ class orders(SPXCafe):
         self.__customer= customer
     def getCustomer(self):
         return self.__cusotmer
-
+    def setMealName(self, mealName=None):
+        self.__mealName = mealName
+    def getMealName(self):
+        return self.__mealName
 
 
 
