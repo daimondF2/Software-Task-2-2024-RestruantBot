@@ -1,20 +1,26 @@
 from SPXCafe2 import SPXCafe
 from Avatar2 import Avatar
 import restrauntCustomer
+import menu
 class orders(SPXCafe):
     def __init__(self, orderId=None, orderDate=None, customer=None):
+        '''constructor class'''
         super().__init__()
         self.SuperBot = Avatar("tenOutOfTenRestaurant Bot")
         self.customerInfo = restrauntCustomer.tenOutOfTenCustomer()
         self.setCustomer(customer)
         self.__orderDate = self.getToday()
-
+        self.menu = menu.Menu()
 
     def askOrder(self):
         # asks for stuff right for fuzzy
         pass
-    def findOrder(self):
-        pass
+    def findOrder(self, meal = None):
+        self.meal =  self.menu.findMeal(meal)
+        for courses in self.meal:
+            for meals in courses:
+                print(meals)
+
 
     def orderFood(self):
         '''gets the order id by using order date'''
@@ -111,7 +117,7 @@ class orders(SPXCafe):
 
 def main():
     o = orders()
-    o.createOrder()
+    o.findOrder(meal="ten")
     
 if __name__=="__main__":
     main()

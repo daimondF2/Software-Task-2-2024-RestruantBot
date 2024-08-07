@@ -105,7 +105,8 @@ def main():
     if meals:
         print(f"we have ofund the follow meals:{meals}")
         for meal in meals:
-            meal.display()
+            for thing in meal:
+                thing.display()
     else:
         print(f"{searchMeal}' not found")
     # searchCourse = input("what course do you want? ")
