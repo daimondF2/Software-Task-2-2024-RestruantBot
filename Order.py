@@ -34,6 +34,9 @@ class orders(SPXCafe):
                     return food
                 else:
                     print(f"{food} is did not match")
+        else:
+            for food in self.mealList:
+                return food
 
     def isMatch(self, choice = None, match = None):
         '''To match and gain confidence in words''' # To do later

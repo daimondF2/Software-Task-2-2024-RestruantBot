@@ -27,7 +27,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         print("------------------------ Cafe Name ------------------------")
         self.basket = []
         self.customer = restrauntCustomer.tenOutOfTenCustomer()
-        self.greetings()
+        # self.greetings()
         # if self.customer.greetings():
         #     self.options()
 
@@ -171,14 +171,17 @@ class tenOutOfTenRestaurant(SPXCafe):
         totalItems = 0 
         ordering = True
         while ordering == True:
-            foodOrder = self.SuperWaiter.listen("What do you want to order? ")  # TO DO FUZZY ADD KEY WORDS
-            meal = self.orderInfo.findOrder(foodOrder)
-            quantity = self.SuperWaiter.listen("How many do you want? ")
-            self.basket[foodOrder] = quantity           # find the meal then add to basket
-            totalItems += quantity
+            # foodOrder = self.SuperWaiter.listen("What do you want to order? ")  # TO DO FUZZY ADD KEY WORDS
+            foodOrder = input("What do you want to order? ")
+            self.meal = self.orderInfo.findOrder(foodOrder)
+            # quantity = self.SuperWaiter.listen("How many do you want? ")
+            quantity = input("What amount? ")
+            self.basket.append([self.meal, quantity])           # find the meal then add to basket
+            print(self.basket)
+            totalItems += int(quantity)
             continueOrder = self.SuperWaiter.listen("Would you like to continue Ordering or go back options: ") # TO DO FuZZY ADD KEY WORDS
-            if continueOrder == "finish":
-                ordering = False
+            if continueOrder == "finish ordering" and totalItems >=3:
+                ordering == False
         if self.basket:
             self.customer.newOrder()
 
@@ -233,7 +236,7 @@ class tenOutOfTenRestaurant(SPXCafe):
 
 def main():
     test = tenOutOfTenRestaurant()
-    test.runMenu()
+    test.getFoodOrder()
 
 if __name__=="__main__":
     main()        
