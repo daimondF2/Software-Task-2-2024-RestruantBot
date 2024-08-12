@@ -124,7 +124,8 @@ class orders(SPXCafe):
 
 def main():
     o = orders()
-    o.findOrder(meal="ten")
+    yourmum = input("what the fk do you want to get: ")
+    o.findOrder(meal=yourmum)
     
 if __name__=="__main__":
     main()
