@@ -159,6 +159,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         ordering = True
         while ordering == True:
             foodOrder = self.SuperWaiter.listen("What do you want to order? ")  # TO DO FUZZY ADD KEY WORDS
+            meal = self.orderInfo.findOrder(foodOrder)
             quantity = self.SuperWaiter.listen("How many do you want? ")
             self.basket[foodOrder] = quantity           # find the meal then add to basket
             totalItems += quantity

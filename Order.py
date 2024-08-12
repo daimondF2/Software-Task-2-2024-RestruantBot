@@ -2,6 +2,7 @@ from SPXCafe2 import SPXCafe
 from Avatar2 import Avatar
 import restrauntCustomer
 import menu
+from rapidfuzz.fuzz import partial_ratio
 class orders(SPXCafe):
     def __init__(self, orderId=None, orderDate=None, customer=None):
         '''constructor class'''
@@ -17,9 +18,31 @@ class orders(SPXCafe):
         pass
     def findOrder(self, meal = None):
         self.meal =  self.menu.findMeal(meal)
+        # print(self.meal)
+        self.mealList= []
         for courses in self.meal:
             for meals in courses:
                 print(meals)
+                self.mealList.append(meals.getMealName())
+                # print(self.mealList)
+        if len(self.meal) > 1:
+            # exactMeal = self.SuperBot.listen(f"Which {meal} do you want?")
+            exactMeal = input(f"Which {meal} do you want? ")
+            for food in self.mealList:
+                if self.isMatch(exactMeal, food):
+                    self.SuperBot.say(f"You have chosen {food}")
+                    return food
+                else:
+                    print(f"{food} is did not match")
+
+    def isMatch(self, choice = None, match = None):
+        '''To match and gain confidence in words''' # To do later
+        confidence = partial_ratio(choice, match) # to edit
+        # print(confidence, choice, match)
+        if confidence >85:
+            return True
+        else:
+            return False         
 
 
 
@@ -112,18 +135,17 @@ class orders(SPXCafe):
         return self.__mealName
 
 
-
-
-
 # Make new Order Id and customer Id
 #ask for meal and orderItem
 # find meal then add to orderItem and give it orderId
 #repeat
 
 def main():
+    '''test Harness'''
     o = orders()
     yourmum = input("what the fk do you want to get: ")
-    o.findOrder(meal=yourmum)
+    x= o.findOrder(meal=yourmum)
+    print(x)
     
 if __name__=="__main__":
     main()
