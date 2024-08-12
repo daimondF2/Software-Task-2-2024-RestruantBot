@@ -85,11 +85,11 @@ class tenOutOfTenCustomer(SPXCafe):
 
     def newOrder(self, basket=None):
         '''connects to orders to create order'''
-        if basket == True:
+        if basket:
             self.order = Order.orders(customer=self)
             self.order.createOrder(customerId=self.getCustomerId())
         else:
-            return False
+            return self.SuperWaiter.say("Please try again.")
     def history(self):
         '''connects to orderhistory to check history'''
         self.orderHS = orderHistory.orderHistory()

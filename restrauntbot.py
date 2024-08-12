@@ -88,6 +88,7 @@ class tenOutOfTenRestaurant(SPXCafe):
 # You must include a price for each dish in that course
 
     def orderHistory(self):
+        '''sends to orderhistory then back to options'''
         self.customer.history()
         self.options()
 
@@ -103,7 +104,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         else:
             return False
         
-    def match(self):
+    def match(self): # key words and stuff
         '''Key words for requests'''
         self.exitRequest =      {
                 "keywords":      ["exit","leave","bye"],
@@ -118,6 +119,9 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.menuRequest =      [["menu", "course", "meal","choice","options"],     "see the menu"]
         self.orderRequest =     [["order", "buy","food"],                           "order some food"]
         self.mainOptions = self.exitRequest["keywords"] + self.historyRequest[0] + self.menuRequest[0] + self.orderRequest[0]
+
+        # ORDER WORDS
+
 
 
     def options(self):
@@ -149,17 +153,23 @@ class tenOutOfTenRestaurant(SPXCafe):
 ############ Getters/ setters ##############
     def getFoodOrder(self):
         '''gets food orders'''
-        self.SuperWaiter.listen("What do you want to order?")
-        # find the meal then add to basket
-        # get meal
-        basket= True
-        self.customer.newOrder(basket)
+        self.basket = []
+        ordering = True
+        while ordering == True:
+            foodOrder = self.SuperWaiter.listen("What do you want to order? ")  # TO DO FUZZY ADD KEY WORDS
+            self.basket.append(foodOrder)           # find the meal then add to basket
+            continueOrder = self.SuperWaiter.listen("Would you like to continue Ordering or finish: ") # TO DO FuZZY ADD KEY WORDS
+            if continueOrder == "finish":
+                ordering = False
+        if self.basket:
+            self.customer.newOrder()
+
         # if self.order == False:
         #     self.getRequest()
         # else:
         #     print("done")
 
-    def getRequest(self):
+    def getRequest(self):       # gets request Options
         '''gets customer Request'''
         option = self.SuperWaiter.listen("What would you like to do?", useSR=False)
         choice = self.getOptions(option, self.mainOptions)

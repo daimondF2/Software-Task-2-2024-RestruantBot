@@ -55,6 +55,7 @@ class orderHistory(SPXCafe):
         return retcode
 
     def displayOrderHistory(self):
+        '''Displays Order Data'''
         # print(f"orderId: {self.getOrderId()}| orderDate: {self.getOrderDates()} | customerId: {self.getCustomerId()}| mealId: {self.getMealId()}| quantity: {self.getQuantity()}| meal: {self.__mealName}| price: {self.__mealPrice}")
         print(f"| orderDate: {self.getOrderDates()} | meal: {self.__mealName} | quantity: {self.getQuantity()} |  price: {self.__mealPrice} |")
 
@@ -78,6 +79,7 @@ class orderHistory(SPXCafe):
             self.totalPrice += int(self.getQuantity())*int(self.__mealPrice) # gets total price of meal
             # print(f"total price: {self.totalPrice}")
             self.findFood()
+            
     def findFood(self):
         '''gets the meal name form mealId'''
         sql = None
