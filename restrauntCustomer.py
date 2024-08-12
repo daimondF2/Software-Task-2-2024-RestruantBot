@@ -90,10 +90,14 @@ class tenOutOfTenCustomer(SPXCafe):
             self.order.createOrder(customerId=self.getCustomerId())
         else:
             return self.SuperWaiter.say("Please try again.")
+        
     def history(self):
         '''connects to orderhistory to check history'''
         self.orderHS = orderHistory.orderHistory()
-        self.orderHS.findOrderHistory(self.getCustomerId())
+        if self.orderHS.existDbHistory(self.getCustomerId()):
+            self.orderHS.findOrderHistory(self.getCustomerId())
+        else:
+            self.SuperWaiter.say("You have had no previous orders with us.")
 
 
     def exitCustomer(self):

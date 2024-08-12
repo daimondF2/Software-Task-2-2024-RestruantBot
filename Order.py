@@ -40,7 +40,6 @@ class orders(SPXCafe):
 # Each order must have a minimum number of 3 dishes in order to proceed to checkout
 # If less than 3 dishes ordered, then the order cannot be saved
 # They may leave ordering at any time and abandon the order – please confirm they really want to do this.
-        pass
 # If 3 or more dishes ordered,
 # They may continue ordering or finish ordering
 # During the order process, the customer should be able to request to access the menu again or abandon the order.
@@ -48,7 +47,6 @@ class orders(SPXCafe):
     def createOrder(self, customerId=None):
         '''creates order ids'''
         sql = None
-
         print(self.__orderDate, customerId)
         sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.__orderDate}','{customerId}')
             '''

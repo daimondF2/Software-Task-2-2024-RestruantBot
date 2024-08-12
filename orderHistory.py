@@ -36,12 +36,12 @@ class orderHistory(SPXCafe):
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
         print(f"| Total price: {self.totalPrice} |") # displays total cost
         
-    def existDb(self):
+    def existDbHistory(self, customerId=None):
         '''check if object already exists in datbase'''
         retcode = False
         sql =None
         if self.getUserName():
-            sql = f'''SELECT count(*) AS count FROM Orders WHERE customerId = '{self.customerInfo.getCustomerId()}' ''' #sql checks for amount of usernames in database
+            sql = f'''SELECT count(*) AS count FROM Orders WHERE customerId = '{customerId}' ''' #sql checks for amount of usernames in database
             # print(sql)
         if sql:
             countData = self.dbGetData(sql)
@@ -79,7 +79,7 @@ class orderHistory(SPXCafe):
             self.totalPrice += int(self.getQuantity())*int(self.__mealPrice) # gets total price of meal
             # print(f"total price: {self.totalPrice}")
             self.findFood()
-            
+
     def findFood(self):
         '''gets the meal name form mealId'''
         sql = None

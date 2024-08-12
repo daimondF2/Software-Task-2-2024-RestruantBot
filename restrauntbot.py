@@ -1,5 +1,3 @@
-# Interact with the Customer to
-# View order history
 # View Menus
 # Order food
 # Your chat bot must have a Natural Conversation/Logic Flow and must be able to handle fuzzy input.
@@ -32,13 +30,13 @@ class tenOutOfTenRestaurant(SPXCafe):
         #     self.options()
 
     '''TO DO'''
+    # order options then add basket check as an option
     # ADD OTHER things LIKE TIME TO DATABASE
     # do order and menu(find meal)
     # add fuzzy logic
         #self.options() # Need to setup options for the customer
 
 # REQUESTS AND FUNCITION
-
     def runMenu(self):
         '''displays the menu'''
         # request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
@@ -93,6 +91,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.options()
 
     def exit(self):
+        '''Exit '''
         print("Thank you for coming to our thing")
 
     def isMatch(self, request= None):
@@ -126,6 +125,7 @@ class tenOutOfTenRestaurant(SPXCafe):
 
     def options(self):
         '''sends customer to chosen area'''
+        print("----------------------- Options ------------------------")
         # choice = self.getRequest()
         # print(choice)
 
@@ -153,12 +153,16 @@ class tenOutOfTenRestaurant(SPXCafe):
 ############ Getters/ setters ##############
     def getFoodOrder(self):
         '''gets food orders'''
-        self.basket = []
+        self.basket = {
+        }
+        totalItems = 0 
         ordering = True
         while ordering == True:
             foodOrder = self.SuperWaiter.listen("What do you want to order? ")  # TO DO FUZZY ADD KEY WORDS
-            self.basket.append(foodOrder)           # find the meal then add to basket
-            continueOrder = self.SuperWaiter.listen("Would you like to continue Ordering or finish: ") # TO DO FuZZY ADD KEY WORDS
+            quantity = self.SuperWaiter.listen("How many do you want? ")
+            self.basket[foodOrder] = quantity           # find the meal then add to basket
+            totalItems += quantity
+            continueOrder = self.SuperWaiter.listen("Would you like to continue Ordering or go back options: ") # TO DO FuZZY ADD KEY WORDS
             if continueOrder == "finish":
                 ordering = False
         if self.basket:
