@@ -25,7 +25,9 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.orderInfo = Order.orders()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
+        self.basket = []
         self.customer = restrauntCustomer.tenOutOfTenCustomer()
+        self.greetings()
         # if self.customer.greetings():
         #     self.options()
 
@@ -37,6 +39,19 @@ class tenOutOfTenRestaurant(SPXCafe):
         #self.options() # Need to setup options for the customer
 
 # REQUESTS AND FUNCITION
+    def greetings(self):
+        '''login or signup options'''
+        #inpNewOrReturning = self.SuperWaiter.listen("Please say Login if you want to Login, say sign up if you are new")
+        while True:
+            self.SuperWaiter.say("Do you want to Order or 'Exit' ")
+            inpNewOrReturning = input("Do you want to 'Order' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
+            if inpNewOrReturning == "order":
+                return self.customer.getCusotmerNewOrReturning() 
+            elif inpNewOrReturning == "exit":
+                return self.exit()        
+            else:
+                self.SuperWaiter.say("Please try again")
+
     def runMenu(self):
         '''displays the menu'''
         # request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
@@ -153,8 +168,6 @@ class tenOutOfTenRestaurant(SPXCafe):
 ############ Getters/ setters ##############
     def getFoodOrder(self):
         '''gets food orders'''
-        self.basket = {
-        }
         totalItems = 0 
         ordering = True
         while ordering == True:

@@ -67,6 +67,13 @@ class orders(SPXCafe):
 # They may continue ordering or finish ordering
 # During the order process, the customer should be able to request to access the menu again or abandon the order.
 
+    def addOrderItem(item, quantity):
+        pass
+    def addOrders(self, orders=None):
+        sql = None
+        if orders:
+            sql = f''''''
+
     def createOrder(self, customerId=None):
         '''creates order ids'''
         sql = None

@@ -8,22 +8,7 @@ class tenOutOfTenCustomer(SPXCafe):
         '''Constructor method'''
         super().__init__()
         self.SuperWaiter = Avatar("tenOutOfTenRestaurant Bot")
-
-    def greetings(self):
-        '''login or signup options'''
-        #inpNewOrReturning = self.SuperWaiter.listen("Please say Login if you want to Login, say sign up if you are new")
-        while True:
-            self.SuperWaiter.say("Do you want to Order or 'Exit' ")
-            inpNewOrReturning = input("Do you want to 'Order' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
-            if inpNewOrReturning == "order":
-                return self.getCusotmerNewOrReturning()
-                
-            elif inpNewOrReturning == "exit":
-                return self.exitCustomer()
-                
-            else:
-                self.SuperWaiter.say("Please try again")
-
+        
     def getCusotmerNewOrReturning(self):
         '''login or signup'''
         signedUp = False
