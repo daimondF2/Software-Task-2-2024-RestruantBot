@@ -27,10 +27,8 @@ class tenOutOfTenRestaurant(SPXCafe):
         print("------------------------ Cafe Name ------------------------")
         self.basket = []
         self.customer = restrauntCustomer.tenOutOfTenCustomer()
-        # self.greetings()
-        # if self.customer.greetings():
-        #     self.options()
-
+        if self.greetings():
+            self.options()
     '''TO DO'''
     # order options then add basket check as an option
     # ADD OTHER things LIKE TIME TO DATABASE
@@ -136,38 +134,47 @@ class tenOutOfTenRestaurant(SPXCafe):
 
         # ORDER WORDS
 
-
-
     def options(self):
         '''sends customer to chosen area'''
         print("----------------------- Options ------------------------")
-        # choice = self.getRequest()
-        # print(choice)
-
-        # if choice in self.exitRequest["keywords"]:
-        #     return self.exit()
-        #     running = False
-        # elif choice in self.historyRequest[0]:
-        #     return self.orderHistory()
-        # elif choice in self.menuRequest[0]:
-        #     return self.runMenu()
-        # elif choice in self.orderRequest[0]:
-        #     return self.getFoodOrder()
-        option = self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
-        option = input("Menu, order history, order, exit: ").lower()
-        if option == "menu":
-            self.runMenu()
-        if option == "history":
-            self.orderHistory()
-        if option == "order":
-            self.getFoodOrder()
-        if option == "Exit":
-            self.exit()
-        choice = self.getOptions(option, self.mainOptions)
+        optionRun = True
+        while optionRun == True:
+            choice = self.getRequest()
+            print(choice)
+            if choice in self.exitRequest["keywords"]:
+                optionRun = False
+                return self.exit()
+            elif choice in self.historyRequest[0]:
+                optionRun = False
+                return self.orderHistory()
+            elif choice in self.menuRequest[0]:
+                optionRun = False
+                return self.runMenu()
+            elif choice in self.orderRequest[0]:
+                optionRun = False
+                return self.getFoodOrder()
+        # option = self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
+        # option = input("Menu, order history, order, exit: ").lower()
+        # if option == "menu":
+        #     self.runMenu()
+        # if option == "history":
+        #     self.orderHistory()
+        # if option == "order":
+        #     self.getFoodOrder()
+        # if option == "Exit":
+        #     self.exit()
+        # choice = self.getOptions(option, self.mainOptions)
 
 ############ Getters ##############
     def getFoodOrder(self):
         '''gets food orders'''
+# Each order must have a minimum number of 3 dishes in order to proceed to checkout
+# If less than 3 dishes ordered, then the order cannot be saved
+# They may leave ordering at any time and abandon the order – please confirm they really want to do this.
+# You must be able to allow the customer to order food from each of the courses
+# If 3 or more dishes ordered,
+# They may continue ordering or finish ordering
+# During the order process, the customer should be able to request to access the menu again or abandon the order.
         totalItems = 0 
         ordering = True
         while ordering == True:
@@ -186,12 +193,16 @@ class tenOutOfTenRestaurant(SPXCafe):
                 continueOrder = self.SuperWaiter.listen("Would you like to continue Ordering or go back options: ") # TO DO FuZZY ADD KEY WORDS
                 if continueOrder == "finish ordering" and totalItems >=3:
                     ordering == False
+                else:
+                    print("You must order three orders to go back to options")
         if self.basket:
             self.customer.newOrder()
         # if self.order == False:
         #     self.getRequest()
         # else:
         #     print("done")
+    def getOrderRequest(self):
+        option =None
 
     def getRequest(self):       # gets request Options
         '''gets customer Request'''
@@ -209,7 +220,7 @@ class tenOutOfTenRestaurant(SPXCafe):
             self.SuperWaiter.say(f"I am sorry, I don't understand your choice. You said: '{option}. Please try again.")
         self.SuperWaiter.say(f"Right, You chose to {response}.")
         return choice
-          
+    
     def getOptions(self, choice=None, options=None):    
         '''Chooose from a list of options'''
         matches = []

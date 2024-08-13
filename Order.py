@@ -14,6 +14,7 @@ class orders(SPXCafe):
         self.menu = menu.Menu()
 
     def findOrder(self, meal = None):
+        '''finds Order using fuzzy logic'''
         self.meal =  self.menu.findMeal(meal)
         # print(self.meal)
         self.mealList=[]
@@ -37,6 +38,7 @@ class orders(SPXCafe):
         else:
             for food in self.mealList:
                 return food
+            
     def isMatch(self, choice = None, match = None):
         '''To match and gain confidence in words''' # To do later
         confidence = partial_ratio(choice, match) # to edit
@@ -45,7 +47,6 @@ class orders(SPXCafe):
             return True
         else:
             return False         
-
 
     def orderFood(self):
         '''gets the order id by using order date'''
@@ -59,29 +60,14 @@ class orders(SPXCafe):
             self.orderId = data['orderId']
             self.setOrderId(self.orderId)
 
-
-        # For Ordering Food
-# You must be able to allow the customer to order food from each of the courses
-
-# Each order must have a minimum number of 3 dishes in order to proceed to checkout
-# If less than 3 dishes ordered, then the order cannot be saved
-# They may leave ordering at any time and abandon the order – please confirm they really want to do this.
-# If 3 or more dishes ordered,
-# They may continue ordering or finish ordering
-# During the order process, the customer should be able to request to access the menu again or abandon the order.
-
     def addOrderItem(self, mealId=None, quantity=None, mealPrice = None):
+        '''adds individual orders to system'''
         sql = None
         sql = f'''INSERT INTO orderItems (orderId, mealId, quantity, mealPrice) VALUES ('{self.getOrderId()}','{mealId}','{quantity}','{mealPrice}')'''
         self.dbPutData(sql)
 
-    def addOrders(self, orders=None):
-        sql = None
-        if orders:
-            sql = f''''''
-
     def createOrder(self, customerId=None, basket = None):
-        '''creates order ids'''
+        '''creates order'''
         sql = None
         print(self.__orderDate, customerId)
         sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.__orderDate}','{customerId}')
@@ -97,6 +83,7 @@ class orders(SPXCafe):
                 print('FINISHED')
 
     def findMealByName(self, mealName=None):
+        '''find Meals using there Names'''
         sql = None
         if mealName:
             sql = f"SELECT mealId, mealName, mealPrice, courseId FROM meals WHERE mealName = '{mealName}'"
@@ -104,25 +91,27 @@ class orders(SPXCafe):
             for meals in mealData:
                 self.setMealId(meals['mealId'])
                 self.setMealPrice(meals['mealPrice'])
-    def viewBasket(self, basket=None):
-        sql = None
-        totalPrice = 0
+
+    def displayBasket(self, basket=None):
+        '''Displays basket'''
+        totalOrderPrice = 0
         if basket:
+            print("|--------------------- Order ---------------------|")
             for orderItems in basket:
+                totalPrice = 0
                 self.findMealByName(orderItems[0])
                 totalPrice += int(self.getMealPrice())*int(orderItems[1])
+                totalOrderPrice +=totalPrice
                 print(f"Meal: {orderItems[0]} | Quantity: {orderItems[1]} | Total Price: {totalPrice}")
-    def checkOut(self):
-        pass
-# On completion of ordering/checkout,
-# you must summarise the order when they have completed ordering
-# What dishes they ordered and the price
-# Total order cost
-# and then ask them for confirmation to proceed to store order
-# Once confirmed to go ahead to complete the order, the order is to be saved to the customer account
-# Order number
-# Dishes and Prices
-# Total cost
+            print(f"| Total Order Price: {totalOrderPrice} |")
+
+    def checkOut(self, basket=None):
+        '''checkOut system'''
+        customerOrder = basket
+        self.displayBasket(basket=customerOrder)
+        orderConfirm = self.SuperBot.listen("Would you liek to confirm Order? ")
+        if orderConfirm == "yes":
+            self.createOrder(basket=customerOrder)
 
     def deleteOrder(self):
         rq = None
@@ -177,8 +166,8 @@ def main():
     # yourmum = input("what the fk do you want to get: ")
     # x= o.findOrder(meal=yourmum)
     # print(x)
-    b = [['steak',2]]
-    o.viewBasket(basket=b)
+    # b = [['steak',2],['Tenoutoften Specialty',2]]
+    # o.checkOut(basket=b)
     # o.findMealByName("steak")
     
 if __name__=="__main__":

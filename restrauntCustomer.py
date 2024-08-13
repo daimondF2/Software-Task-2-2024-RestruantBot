@@ -8,7 +8,7 @@ class tenOutOfTenCustomer(SPXCafe):
         '''Constructor method'''
         super().__init__()
         self.SuperWaiter = Avatar("tenOutOfTenRestaurant Bot")
-        
+
     def getCusotmerNewOrReturning(self):
         '''login or signup'''
         signedUp = False
@@ -84,7 +84,6 @@ class tenOutOfTenCustomer(SPXCafe):
         else:
             self.SuperWaiter.say("You have had no previous orders with us.")
 
-
     def exitCustomer(self):
         '''customer exit'''
         print("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
@@ -117,7 +116,6 @@ class tenOutOfTenCustomer(SPXCafe):
         self.setCustomerId(self.customerId)
 
         return retcode
-
     def setFirstName(self, firstName = None):
         self.__firstName= firstName
     def setLastName(self, lastName = None):
@@ -143,52 +141,3 @@ def main():
     customer.newOrder()
 if __name__=="__main__":
     main()
-# Notes
-    #     '''Creates customer Object from database info
-    #     arguments: either userName or cusomter Ide'''
-    #     retcode = False
-    #     if userName:
-    #         self.setUserName(userName)
-    #     if customerId:
-    #         self.setCustomerId(customerId)
-    #     customerData =None
-    #     if self.getCustomerId(): # customer must exist
-    #         sql = f'''
-    #             SELECT customerId, userName, firstName, lastName
-    #             FROM custumers
-    #             WHERE customerId = {self.getCustomerId()}
-    #             ORDER BY customerId'''
-    #     # eithernew cusotmer orexisting get useoing username
-    #     elif self.getUserName():
-    #         sql  =f'''
-    #             SELECT customerId, userName, firstName, lastName
-    #             FROM customers
-    #             WHERE userName = '{self.getUserName()}'
-    #             ORDER BY customerId
-    #             '''
-    #     customerData = self.dbGetData(sql)
-    #     if customerData:
-    #         #Eiting customer = should only be one customer
-    #         for cusomter in customerData:
-    #             self.customerId = customer['customerId']
-    #             self.userName = customer['userName']
-    #             self.firstName = customer['firstName']
-    #             self.lastName = customer['lastName']
-    #             # Call ORDER factory method to return a list of order objects/instances - pass self to it
-    #             # self.setORders(Order.getORders(self))
-    #             retcode = True
-    #     return retcode
-        # def login(self):
-    #     print("login")
-    #     login = False
-    #     self.SuperWaiter.say("Please enter your username: ")
-    #     userName = input("Please enter your username: ").lower()    # for accuracy
-    #     self.setUserName(userName)
-    #     if self.existsDBUserName(): # checks if username is in database
-    #         login = True
-    #     else:                       # Person only has one chance to get their username right
-    #         print("Username incorrect!")
-    #         self.SuperWaiter.say("Your UserName is incorrect!")
-    #         self.SuperWaiter.say("Redirecting to signUp")
-    #         self.signUp()
-    #     return login
