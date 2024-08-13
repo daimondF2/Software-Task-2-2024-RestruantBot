@@ -78,9 +78,9 @@ class orderHistory(SPXCafe):
             self.setMealId(self.mealId)
             self.totalPrice += int(self.getQuantity())*int(self.__mealPrice) # gets total price of meal
             # print(f"total price: {self.totalPrice}")
-            self.findFood()
+            self.findMealName()
 
-    def findFood(self):
+    def findMealName(self):
         '''gets the mealName form mealId'''
         sql = None
         sql = f'''SELECT mealId, mealName, mealPrice, courseId 

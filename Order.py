@@ -13,16 +13,18 @@ class orders(SPXCafe):
         self.__orderDate = self.getToday()
         self.menu = menu.Menu()
 
-
     def findOrder(self, meal = None):
         self.meal =  self.menu.findMeal(meal)
         # print(self.meal)
-        self.mealList= []
-        for courses in self.meal:
-            for meals in courses:
-                print(f"We found {meals}")
-                self.mealList.append(meals.getMealName())
-                # print(self.mealList)
+        self.mealList=[]
+        if self.meal:
+            for courses in self.meal:
+                for meals in courses:
+                    print(f"We found {meals}")
+                    self.mealList.append(meals.getMealName())
+                    # print(self.mealList)
+        else:
+            return False
         if len(self.meal) > 1:
             # exactMeal = self.SuperBot.listen(f"Which {meal} do you want?")
             exactMeal = input(f"Which {meal} do you want? ")
@@ -68,8 +70,11 @@ class orders(SPXCafe):
 # They may continue ordering or finish ordering
 # During the order process, the customer should be able to request to access the menu again or abandon the order.
 
-    def addOrderItem(item, quantity):
-        pass
+    def addOrderItem(self, mealId=None, quantity=None, mealPrice = None):
+        sql = None
+        sql = f'''INSERT INTO orderItems (orderId, mealId, quantity, mealPrice) VALUES ('{self.getOrderId()}','{mealId}','{quantity}','{mealPrice}')'''
+        self.dbPutData(sql)
+
     def addOrders(self, orders=None):
         sql = None
         if orders:
@@ -86,10 +91,27 @@ class orders(SPXCafe):
         self.orderFood()
         if basket:
             for orders in basket:
-                
-                sql = f'''INSERT INTO orderItem (orderDate, customerId) VALUES ('{self.__orderDate}','{customerId}')'''
-                self.dbPutData(sql)
+                self.findMealByName(mealName=orders[0])
+                quantity = orders[1]
+                self.addOrderItem(mealId=self.getMealId(), quantity=quantity, mealPrice=self.getMealPrice())
+                print('FINISHED')
 
+    def findMealByName(self, mealName=None):
+        sql = None
+        if mealName:
+            sql = f"SELECT mealId, mealName, mealPrice, courseId FROM meals WHERE mealName = '{mealName}'"
+            mealData = self.dbGetData(sql)
+            for meals in mealData:
+                self.setMealId(meals['mealId'])
+                self.setMealPrice(meals['mealPrice'])
+    def viewBasket(self, basket=None):
+        sql = None
+        totalPrice = 0
+        if basket:
+            for orderItems in basket:
+                self.findMealByName(orderItems[0])
+                totalPrice += int(self.getMealPrice())*int(orderItems[1])
+                print(f"Meal: {orderItems[0]} | Quantity: {orderItems[1]} | Total Price: {totalPrice}")
     def checkOut(self):
         pass
 # On completion of ordering/checkout,
@@ -119,26 +141,14 @@ class orders(SPXCafe):
 # Thank the customer by name and wish them well and ask them to come back again another time in a polite way.
 
 ######## getters/setters ##############
-    # def getOrders(self):
-    #     sql = None
-    #     if self.customerInfo.getCustomerId():
-    #         sql = f'''SELECT orderId, orderItemId, customerId 
-    #         FROM orderItems
-    #         WHERE customerId = '{self.customerInfo.getCustomerId()}'
-    #         ORDER BY orderId
-    #         '''
-    #         self.dbGetData(sql)
-
     def setOrder(self):
         sql = None
         sql = ''''''
 
     def setOrderId(self, orderId):
         self.__orderId = orderId
-
     def getOrderId(self):
         return self.__orderId
-
     def setCustomer(self, customer=None):
         self.__customer= customer
     def getCustomer(self):
@@ -147,7 +157,14 @@ class orders(SPXCafe):
         self.__mealName = mealName
     def getMealName(self):
         return self.__mealName
-
+    def setMealId(self, mealId=None):
+        self.__mealId = mealId
+    def getMealId(self):
+        return self.__mealId
+    def setMealPrice(self, mealPrice=None):
+        self.__mealPrice = mealPrice
+    def getMealPrice(self):
+        return self.__mealPrice
 
 # Make new Order Id and customer Id
 #ask for meal and orderItem
@@ -157,9 +174,22 @@ class orders(SPXCafe):
 def main():
     '''test Harness'''
     o = orders()
-    yourmum = input("what the fk do you want to get: ")
-    x= o.findOrder(meal=yourmum)
-    print(x)
+    # yourmum = input("what the fk do you want to get: ")
+    # x= o.findOrder(meal=yourmum)
+    # print(x)
+    b = [['steak',2]]
+    o.viewBasket(basket=b)
+    # o.findMealByName("steak")
     
 if __name__=="__main__":
     main()
+
+# def getOrders(self):
+#     sql = None
+#     if self.customerInfo.getCustomerId():
+#         sql = f'''SELECT orderId, orderItemId, customerId 
+#         FROM orderItems
+#         WHERE customerId = '{self.customerInfo.getCustomerId()}'
+#         ORDER BY orderId
+#         '''
+#         self.dbGetData(sql)
