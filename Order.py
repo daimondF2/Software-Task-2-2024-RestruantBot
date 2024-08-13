@@ -13,16 +13,14 @@ class orders(SPXCafe):
         self.__orderDate = self.getToday()
         self.menu = menu.Menu()
 
-    def askOrder(self):
-        # asks for stuff right for fuzzy
-        pass
+
     def findOrder(self, meal = None):
         self.meal =  self.menu.findMeal(meal)
         # print(self.meal)
         self.mealList= []
         for courses in self.meal:
             for meals in courses:
-                print(meals)
+                print(f"We found {meals}")
                 self.mealList.append(meals.getMealName())
                 # print(self.mealList)
         if len(self.meal) > 1:
@@ -37,7 +35,6 @@ class orders(SPXCafe):
         else:
             for food in self.mealList:
                 return food
-
     def isMatch(self, choice = None, match = None):
         '''To match and gain confidence in words''' # To do later
         confidence = partial_ratio(choice, match) # to edit
@@ -46,7 +43,6 @@ class orders(SPXCafe):
             return True
         else:
             return False         
-
 
 
     def orderFood(self):
@@ -60,6 +56,8 @@ class orders(SPXCafe):
         for data in orderData:
             self.orderId = data['orderId']
             self.setOrderId(self.orderId)
+
+
         # For Ordering Food
 # You must be able to allow the customer to order food from each of the courses
 
@@ -77,14 +75,20 @@ class orders(SPXCafe):
         if orders:
             sql = f''''''
 
-    def createOrder(self, customerId=None):
+    def createOrder(self, customerId=None, basket = None):
         '''creates order ids'''
         sql = None
         print(self.__orderDate, customerId)
         sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.__orderDate}','{customerId}')
             '''
-        print(sql)
         self.dbPutData(sql)
+        print(sql)
+        self.orderFood()
+        if basket:
+            for orders in basket:
+                
+                sql = f'''INSERT INTO orderItem (orderDate, customerId) VALUES ('{self.__orderDate}','{customerId}')'''
+                self.dbPutData(sql)
 
     def checkOut(self):
         pass

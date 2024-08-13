@@ -7,7 +7,7 @@ class orderHistory(SPXCafe):
         self.SuperCustomer = Avatar("tenOutOfTenRestaurant Bot")
         self.getToday()
         self.totalPrice = 0
-        print("---------------------- Past Orders ----------------------")
+        print("|---------------------- Past Orders ----------------------|")
 
     def findOrderHistory(self, customerId=None):
         '''gets order ids and all orders made by customer'''
@@ -81,7 +81,7 @@ class orderHistory(SPXCafe):
             self.findFood()
 
     def findFood(self):
-        '''gets the meal name form mealId'''
+        '''gets the mealName form mealId'''
         sql = None
         sql = f'''SELECT mealId, mealName, mealPrice, courseId 
             FROM meals 

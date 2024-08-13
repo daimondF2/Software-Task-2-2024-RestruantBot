@@ -165,7 +165,7 @@ class tenOutOfTenRestaurant(SPXCafe):
             self.exit()
         choice = self.getOptions(option, self.mainOptions)
 
-############ Getters/ setters ##############
+############ Getters ##############
     def getFoodOrder(self):
         '''gets food orders'''
         totalItems = 0 
@@ -184,7 +184,6 @@ class tenOutOfTenRestaurant(SPXCafe):
                 ordering == False
         if self.basket:
             self.customer.newOrder()
-
         # if self.order == False:
         #     self.getRequest()
         # else:
@@ -215,8 +214,7 @@ class tenOutOfTenRestaurant(SPXCafe):
             if not choice:
                 choice = self.SuperWaiter.listen().strip().lower()
                 if not choice:
-                    break
-            
+                    break   
             results = extract(choice, options, scorer=partial_ratio, processor=default_process)
             for result in results:
                 (match, confidence, index) = result
@@ -241,29 +239,5 @@ def main():
 if __name__=="__main__":
     main()        
 
-# ARCHIVE OF CODE THAT COULD WORK
-    # def addUser(self):
-    #     sql = None
-        # if self.getUserName():
-        #     sql = f"INSERT INTO Customers (userName) VALUES ({self.getUserName()})"
-        # if self.getFirstName():
-        #     sql = f"INSERT INTO Customers (firstName) VALUES ({self.getFirstName()})"
-        # if self.getLastName():
-        #     sql = f"INSERT INTO Customers (lastName) VALUES ({self.getLastName()})"
-        # sql = f'''INSERT INTO customers (userName, firstName, lastName) VALUES
-        #         ('{self.getUserName()}','{self.getFirstName()}','{self.getLastName()}')'''
-        # self.dbPutData(sql) 
-
-
-#You must be able to store orders for a particular customer username 
-#– using order numbers to differentiate between each order the customer made
-# You must be able to store orders for a particular customer username – using order numbers to differentiate between each order the customer made
-# Customer Actions
-
-# The main things that the customer is allowed to do are:
-# Order food
-# View previous orders
-# See the menu
-# Exit the system
 
 
