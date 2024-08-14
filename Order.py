@@ -155,11 +155,6 @@ class orders(SPXCafe):
     def getMealPrice(self):
         return self.__mealPrice
 
-# Make new Order Id and customer Id
-#ask for meal and orderItem
-# find meal then add to orderItem and give it orderId
-#repeat
-
 def main():
     '''test Harness'''
     o = orders()

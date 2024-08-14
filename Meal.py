@@ -5,15 +5,12 @@ from rapidfuzz.fuzz import QRatio, partial_ratio, ratio, WRatio
 class Meal(SPXCafe):
 
     def __init__(self,mealId=None, mealName=None, mealPrice=None, courseId=None,course=None):
-
         super().__init__()
-
         self.setMealId(mealId)
         self.setMealName(mealName)
         self.setMealPrice(mealPrice)
         self.setCourseId(courseId)
         self.setCourse(course)
-
         # This checks if Meal already exists... if so, just load it.
         if self.existsDB():
             if not self.setMeal():

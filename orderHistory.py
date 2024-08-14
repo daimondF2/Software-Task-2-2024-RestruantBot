@@ -35,6 +35,7 @@ class orderHistory(SPXCafe):
                 self.findOrderFood()
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
         print(f"| Total price: {self.totalPrice} |") # displays total cost
+        print("....................")
         
     def existDbHistory(self, customerId=None):
         '''check if object already exists in datbase'''
@@ -57,7 +58,10 @@ class orderHistory(SPXCafe):
     def displayOrderHistory(self):
         '''Displays Order Data'''
         # print(f"orderId: {self.getOrderId()}| orderDate: {self.getOrderDates()} | customerId: {self.getCustomerId()}| mealId: {self.getMealId()}| quantity: {self.getQuantity()}| meal: {self.__mealName}| price: {self.__mealPrice}")
-        print(f"| orderDate: {self.getOrderDates()} | meal: {self.__mealName} | quantity: {self.getQuantity()} |  price: {self.__mealPrice} |")
+        characters = f"| Order Date: {self.getOrderDates()} | Meal: {self.__mealName} | Quantity: {self.getQuantity()} |  Price: {self.__mealPrice} |"
+        print("-"*len(characters))
+        print(f"| Order Date: {self.getOrderDates()} | Meal: {self.__mealName} | Quantity: {self.getQuantity()} |  Price: {self.__mealPrice} |")
+        print("."*len(characters))
 
     def findOrderFood(self):
         '''Finds the orders from orderId'''

@@ -9,7 +9,7 @@ from rapidfuzz.process import extract
 from rapidfuzz.utils import default_process
 import menu
 import Meal
-from Course import Course
+import Course
 import restrauntCustomer
 import Order
 class tenOutOfTenRestaurant(SPXCafe):
@@ -19,7 +19,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.SuperWaiter = Avatar("tenOutOfTenRestaurant Bot") #
         self.SuperWaiter.introduce()
         self.nlp = NLPdemo()
-        self.callMenu = menu.Menu()
+        self.callMenu = menu.Menu("TenOutOfTenRestauruant")
         self.mealInfo = Meal.Meal()
         self.match()
         self.orderInfo = Order.orders()
@@ -27,8 +27,8 @@ class tenOutOfTenRestaurant(SPXCafe):
         print("------------------------ Cafe Name ------------------------")
         self.basket = []
         self.customer = restrauntCustomer.tenOutOfTenCustomer()
-        if self.greetings():
-            self.options()
+        # if self.greetings():
+        #     self.options()
     '''TO DO'''
     # order options then add basket check as an option
     # ADD OTHER things LIKE TIME TO DATABASE
@@ -53,8 +53,9 @@ class tenOutOfTenRestaurant(SPXCafe):
     def runMenu(self):
         '''displays the menu'''
         # request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
-        request = input("menu, course, find a meal")
+        request = input("menu, course, find a meal: ")
         # ask for what they would like to see
+        course = Course
         running = True
         while running:
             self.callMenu.setMenuName("TenOutOfTen") # build fuzzy
@@ -63,20 +64,32 @@ class tenOutOfTenRestaurant(SPXCafe):
                 running = False
             elif request == "course":
                 self.callMenu.displayCourses()
-                running = False
-                # ask for what course or go back # to go back call a function that recalls the function
+                # courseRequest = self.SuperWaiter.listen("Which course would you like to look at or would you like to go back to option?")
+                courseRequest = input("what course? ").lower() #to do fuzzy
+                if courseRequest == "entree":
+                    # find meal in course
+                    course.Course(1).display()
+                elif courseRequest == "main":
+                    course.Course(2).display()
+                elif courseRequest == "desert":
+                    course.Course(3).display()
+                running = False             # ask for what course or go back # to go back call a function that recalls the function
             elif request == "find a meal":
-                # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
-                searchMeal = input("what meal you want to find: ")
-                # find all meals
-                meals = self.callMenu.findMeal(searchMeal)
-                if meals:
-                    for course in meals:
-                        for meal in course:
-                            meal.display()
-                    running = False
-                else:
-                    print(f"{searchMeal}' not found")
+                areaRequest = self.SuperWaiter.listen("Do you want to find a Meal in a course or a Meal from the entire menu?")
+                if areaRequest == 'course':
+                    pass
+                elif areaRequest == 'menu':
+                    # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
+                    searchMeal = input("what meal you want to find: ")
+                    # find all meals
+                    meals = self.callMenu.findMeal(searchMeal)
+                    if meals:
+                        for course in meals:
+                            for meal in course:
+                                meal.display()
+                        running = False
+                    else:
+                        print(f"{searchMeal}' not found")
                 # find meal in a course
                 # if self.mealInfo.isMatch(searchMeal):
                 #     print('match')
@@ -249,7 +262,7 @@ class tenOutOfTenRestaurant(SPXCafe):
 
 def main():
     test = tenOutOfTenRestaurant()
-    test.getFoodOrder()
+    test.runMenu()
 
 if __name__=="__main__":
     main()        
