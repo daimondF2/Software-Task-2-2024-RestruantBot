@@ -70,9 +70,10 @@ class tenOutOfTenCustomer(SPXCafe):
 
     def newOrder(self, basket=None):
         '''connects to orders to create order'''
+        trolley = basket
         if basket:
             self.order = Order.orders(customer=self)
-            self.order.createOrder(customerId=self.getCustomerId())
+            self.order.createOrder(customerId=self.getCustomerId(), basket=trolley)
         else:
             return self.SuperWaiter.say("Please try again.")
         

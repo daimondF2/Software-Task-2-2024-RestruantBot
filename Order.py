@@ -158,9 +158,9 @@ class orders(SPXCafe):
 def main():
     '''test Harness'''
     o = orders()
-    # yourmum = input("what the fk do you want to get: ")
-    # x= o.findOrder(meal=yourmum)
-    # print(x)
+    yourmum = input("what the fk do you want to get: ")
+    x= o.findOrder(meal=yourmum)
+    print(x)
     # b = [['steak',2],['Tenoutoften Specialty',2]]
     # o.checkOut(basket=b)
     # o.findMealByName("steak")
