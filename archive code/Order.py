@@ -130,10 +130,6 @@ class orders(SPXCafe):
 # Thank the customer by name and wish them well and ask them to come back again another time in a polite way.
 
 ######## getters/setters ##############
-    def setOrder(self):
-        sql = None
-        sql = ''''''
-
     def setOrderId(self, orderId):
         self.__orderId = orderId
     def getOrderId(self):
