@@ -8,7 +8,7 @@ import menu
 import Meal
 import Course
 import restrauntCustomer
-import Order
+import orderItems
 class tenOutOfTenRestaurant(SPXCafe):
     def __init__(self):
         '''Constructor method'''
@@ -19,7 +19,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.callMenu = menu.Menu("TenOutOfTenRestauruant")
         self.mealInfo = Meal.Meal()
         self.match()
-        self.orderInfo = Order.orders()
+        self.orderInfo = orderItems.orderItems()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
         self.basket = []
@@ -301,6 +301,12 @@ class tenOutOfTenRestaurant(SPXCafe):
             return True
         else:
             return False 
+    # getters/setters
+    def setCustomerId(self, customerId=None):
+        self.__customerId = customerId
+    def getCustomerId(self):
+        return self.__customerId    
+    
 def main():
     test = tenOutOfTenRestaurant()
     # print(test)

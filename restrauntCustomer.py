@@ -1,13 +1,14 @@
 from SPXCafe2 import SPXCafe
 from Avatar2 import Avatar
-import Order
-import orderHistory
+import orderItems
+import orderDb
 class tenOutOfTenCustomer(SPXCafe):
 
-    def __init__(self):
+    def __init__(self, userName=None, firstName=None, lastName =None, customerId = None):
         '''Constructor method'''
         super().__init__()
         self.SuperWaiter = Avatar("tenOutOfTenRestaurant Bot")
+        self.setCustomerId(customerId=customerId)
 
     def getCusotmerNewOrReturning(self):
         '''login or signup'''
@@ -72,16 +73,17 @@ class tenOutOfTenCustomer(SPXCafe):
         '''connects to orders to create order'''
         trolley = basket
         if basket:
-            self.order = Order.orders(customer=self)
-            self.order.createOrder(customerId=self.getCustomerId(), basket=trolley)
+            self.order = orderItems.orderItems(customer=self)
+            self.orderHS = orderDb.orderDb(self.getCustomerId())
+            self.orderHS.createOrder(customerId=self.getCustomerId(), basket=trolley)
         else:
             return self.SuperWaiter.say("Please try again.")
         
     def history(self):
         '''connects to orderhistory to check history'''
-        self.orderHS = orderHistory.orderHistory()
-        if self.orderHS.existDbHistory(self.getCustomerId()):
-            self.orderHS.findOrderHistory(self.getCustomerId())
+        self.orderHS = orderDb.orderDb(self.getCustomerId())
+        if self.orderHS.existDbOrder(self.getCustomerId()):
+            self.orderHS.setOrder()
         else:
             self.SuperWaiter.say("You have had no previous orders with us.")
 
@@ -137,8 +139,10 @@ class tenOutOfTenCustomer(SPXCafe):
 
 def main():
     '''test harness'''
-    customer= tenOutOfTenCustomer()
-    customer.getCusotmerNewOrReturning()
-    customer.newOrder()
+    customer= tenOutOfTenCustomer(1)
+    customer.history()
+
+    # customer.getCusotmerNewOrReturning()
+    # customer.newOrder()
 if __name__=="__main__":
     main()

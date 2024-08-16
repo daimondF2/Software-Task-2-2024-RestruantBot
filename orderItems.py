@@ -5,14 +5,17 @@ import menu
 import orderDb
 from rapidfuzz.fuzz import partial_ratio
 class orderItems(SPXCafe):
-    def __init__(self, orderId = None):
+    def __init__(self, orderId = None, mealId = None, mealPrice = None, quantity = None):
         super().__init__()
         self.SuperBot = Avatar("tenOutOfTenRestauraunt Bot")
         self.setOrderId(orderId)
         self.menu = menu.Menu()
+        self.orderDb = orderDb.orderDb()
+        self.totalPrice = 0
 
     def getOrderItems(self, orderId = None):
         '''Finds the orders from orderId'''
+        dataList = []
         sql =None
         if orderId:
             sql = f'''SELECT orderItemId, orderId, mealId, quantity, mealPrice 
@@ -39,8 +42,10 @@ class orderItems(SPXCafe):
             self.totalPrice += int(self.getQuantity())*int(self.getMealPrice()) # gets total price of meal
             # print(f"total price: {self.totalPrice}")
             self.findMealName()
-
-    def findMealName(self):
+            dataList.append([self.getMealName(), self.getQuantity(), self.getMealPrice(), self.totalPrice])
+        return dataList
+        
+    def findMealName(self, mealId=None):
         '''gets the mealName form mealId'''
         sql = None
         sql = f'''SELECT mealId, mealName, mealPrice, courseId 
@@ -51,7 +56,6 @@ class orderItems(SPXCafe):
         mealData = self.dbGetData(sql)
         for meals in mealData:
             self.setMealName(meals['mealName'])
-            self.displayOrderHistory()
 
 
     def findOrder(self, meal = None):
@@ -89,14 +93,15 @@ class orderItems(SPXCafe):
         else:
             return False 
         
-    def addOrderItem(self, mealId=None, quantity=None, mealPrice = None):
+    def addOrderItem(self, mealId=None, quantity=None, mealPrice = None,orderId =None):
         '''adds individual orders to system'''
-        sql = None
-        sql = f'''INSERT INTO orderItems (orderId, mealId, quantity, mealPrice) VALUES ('{self.getOrderId()}','{mealId}','{quantity}','{mealPrice}')'''
+        sql = None 
+        sql = f'''INSERT INTO orderItems (orderId, mealId, quantity, mealPrice) VALUES ('{orderId}','{mealId}','{quantity}','{mealPrice}')'''
         self.dbPutData(sql)
 
     def findMealByName(self, mealName=None):
         '''find Meals using there Names'''
+        mealList = []
         sql = None
         if mealName:
             sql = f"SELECT mealId, mealName, mealPrice, courseId FROM meals WHERE mealName = '{mealName}'"
@@ -104,6 +109,9 @@ class orderItems(SPXCafe):
             for meals in mealData:
                 self.setMealId(meals['mealId'])
                 self.setMealPrice(meals['mealPrice'])
+                mealList.append(self.getMealId())
+                mealList.append(self.getMealPrice())
+            return mealList
 
     def displayBasket(self, basket=None):
         '''Displays basket'''
@@ -126,9 +134,6 @@ class orderItems(SPXCafe):
         if orderConfirm == "yes":
             self.createOrder(basket=customerOrder)
 
-
-
-
 # getters/ setters
     def setOrderItemId(self, orderItemId=None):
         self.__orderItemId = orderItemId
@@ -146,10 +151,10 @@ class orderItems(SPXCafe):
         self.__orderId = orderId
     def getOrderId(self):
         return self.__orderId
-    def setTotalPrice(self, totalPrice = None):
-        self.__totalPrice = totalPrice
-    def getTotalPrice(self):
-        return self.__totalPrice
+    # def setTotalPrice(self, totalPrice = None):
+    #     self.__totalPrice = totalPrice
+    # def getTotalPrice(self):
+    #     return self.__totalPrice
     def setMealName(self, mealName=None):
         self.__mealName = mealName
     def getMealName(self):
@@ -158,3 +163,9 @@ class orderItems(SPXCafe):
         self.__mealPrice = mealPrice
     def getMealPrice(self):
         return self.__mealPrice
+def main():
+    x=orderItems()
+    basker = [["streak", 3], ["steak", 2]]
+    x.displayBasket(basker)
+if __name__ == "__main__":
+    main()

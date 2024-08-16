@@ -6,12 +6,10 @@ class orderDb(SPXCafe):
         '''Constructor '''
         super().__init__()
         self.SuperCustomer = Avatar("tenOutOfTenRestaurant Bot")
-        self.getToday()
         self.totalPrice = 0
         self.setCustomerId(customerId)
-        print("|---------------------- Past Orders ----------------------|")
 
-    def setOrder(self):
+    def setOrder(self, customerId = None):
         '''gets order ids and all orders made by customer'''
         sql =None
         if self.getCustomerId():
@@ -20,10 +18,17 @@ class orderDb(SPXCafe):
             WHERE customerId = '{self.getCustomerId()}'
             ORDER BY orderId
             '''
+        else:
+            sql = f'''SELECT orderId, orderDate, customerId 
+            FROM Orders 
+            WHERE customerId = '{customerId}'
+            ORDER BY orderId
+            '''
             # print(sql)
             orderHSdata = self.dbGetData(sql)
             # print(orderHSdata)
         if orderHSdata:
+            print("|---------------------- Past Orders ----------------------|")
             for orders in orderHSdata:
                 self.orderId = orders['orderId']
                 self.orderDate = orders['orderDate']
@@ -35,8 +40,12 @@ class orderDb(SPXCafe):
                 # print(self.getOrderDates())           checks if they worked
                 # print(self.getCustomerId())
                 self.order = orderItems.orderItems(self.getOrderId())
-                self.order.getOrderItems()
+                datalist = self.order.getOrderItems(self.getOrderId())
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
+                for data in datalist:
+                    self.setQuantity(data[1])
+                    self.totalPrice += data[3]
+                    self.displayOrders(mealPrice=data[2], mealName = data[0])
         print(f"| Total price: {self.totalPrice} |") # displays total cost
         print("....................")
         
@@ -44,7 +53,7 @@ class orderDb(SPXCafe):
         '''check if object already exists in datbase'''
         retcode = False
         sql =None
-        if self.getUserName():
+        if customerId:
             sql = f'''SELECT count(*) AS count FROM Orders WHERE customerId = '{customerId}' ''' #sql checks for amount of usernames in database
             # print(sql)
         if sql:
@@ -58,37 +67,38 @@ class orderDb(SPXCafe):
                     retcode = True
         return retcode
 
-    def displayOrders(self):
+    def displayOrders(self, mealPrice=None, mealName= None, quantity = None):
         '''Displays Order Data'''
         # print(f"orderId: {self.getOrderId()}| orderDate: {self.getOrderDates()} | customerId: {self.getCustomerId()}| mealId: {self.getMealId()}| quantity: {self.getQuantity()}| meal: {self.__mealName}| price: {self.__mealPrice}")
-        characters = f"| Order Date: {self.getOrderDates()} | Meal: {self.__mealName} | Quantity: {self.getQuantity()} |  Price: {self.__mealPrice} |"
+        characters = f"| Order Date: {self.getOrderDates()} | Meal: {mealName} | Quantity: {self.getQuantity()} |  Price: {mealPrice} |"
         print("-"*len(characters))
-        print(f"| Order Date: {self.getOrderDates()} | Meal: {self.__mealName} | Quantity: {self.getQuantity()} |  Price: {self.__mealPrice} |")
+        print(f"| Order Date: {self.getOrderDates()} | Meal: {mealName} | Quantity: {self.getQuantity()} |  Price: {mealPrice} |")
         print("."*len(characters))
 
     def createOrder(self, customerId=None, basket = None):
         '''creates order'''
         sql = None
-        print(self.__orderDate, customerId)
-        sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.__orderDate}','{customerId}')
+        # print(self.__orderDate, customerId)
+        sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.getToday()}','{customerId}')
             '''
         self.dbPutData(sql)
-        print(sql)
-        self.orderFood()
+        # print(sql)
+        idOrder = self.orderFood()
+        self.orderItem = orderItems.orderItems()
         if basket:
             for orders in basket:
-                self.findMealByName(mealName=orders[0])
+                mealDataList = self.orderItem.findMealByName(mealName=orders[0])
                 quantity = orders[1]
-                self.addOrderItem(mealId=self.getMealId(), quantity=quantity, mealPrice=self.getMealPrice())
+                self.orderItem.addOrderItem(mealId=mealDataList[0], quantity=quantity, mealPrice=mealDataList[1], orderId=idOrder)
                 print('FINISHED')
 
-                
+
     def orderFood(self):
         '''gets the order id by using order date'''
         sql = None
         sql = f'''SELECT orderId, orderDate, customerId 
             FROM Orders 
-            WHERE orderDate = '{self.__orderDate}'
+            WHERE orderDate = '{self.getToday()}'
             ORDER BY orderId '''
         orderData = self.dbGetData(sql)
         for data in orderData:
@@ -108,10 +118,17 @@ class orderDb(SPXCafe):
         self.__customerId = customerId
     def getCustomerId(self):
         return self.__customerId
+    def setQuantity(self, quantity = None):
+        self.__quantity = quantity
+    def getQuantity(self):
+        return self.__quantity
     
 def main():
     '''test harness'''
     orderHs= orderDb()
-    orderHs.setOrder(customerId=1)
+    # basker = [["streak", 3]]
+    # orderHs.createOrder(customerId=1, basket=basker)
+    # print("finish")
+    orderHs.setOrder(1)
 if __name__ == "__main__":
     main()

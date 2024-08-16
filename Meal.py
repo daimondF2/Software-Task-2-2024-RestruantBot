@@ -133,7 +133,7 @@ class Meal(SPXCafe):
         meals = []
         if course:
             sql = f"SELECT mealId, mealName, mealPrice, courseId FROM meals WHERE courseId = {course.getCourseId()}"
-            print(f"test all meals: {sql}")
+            # print(f"test all meals: {sql}")
 
             mealsData = SPXCafe().dbGetData(sql)
 
