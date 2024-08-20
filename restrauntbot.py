@@ -22,24 +22,48 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.orderInfo = orderItems.orderItems()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ Cafe Name ------------------------")
-        self.basket = []
+        self.basket = [] # This is an aggregation of Meal/orderItems objects
         self.customer = restrauntCustomer.tenOutOfTenCustomer()
         if self.greetings():
-            self.options()
+            self.options() # if true send to customer options
 
 # REQUESTS AND FUNCITION
+    def getCustomerNewOrReturning(self):
+        '''login or signup'''
+        signedUp = False
+        self.SuperWaiter.say("Please enter your username: ")
+        userName = input("Please enter your username: ").lower() # for accuracy
+        self.customer.setUserName(userName) # sets username
+        if self.customer.existsDBUserName(): # checks if username in database to prevent overlapping 
+            self.setCustomerId(self.customer.setCustomer())
+            self.SuperWaiter.say(f"Welcome back to TenOutOfTenRestraunt by Cree gaming, {self.customer.getFirstName()} {self.customer.getLastName()}!")
+            signedUp = True
+        else:
+            firstName = self.SuperWaiter.say("Please enter your first name: ")
+            firstName = input("Please enter your first name: ").lower() # asks first Name
+            self.customer.setFirstName(firstName)                                # sets first Name
+            self.SuperWaiter.say("Please enter your last name: ")       
+            lastName = input("Please enter your last name: ").lower()   # asks last name .lower()
+            self.customer.setLastName(lastName)                                  # sets last name
+            self.customer.saveCustomer() 
+            self.setCustomerId(self.customer.setCustomer())                                       # adds users to database (saves)
+            self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
+            signedUp = True # ends signup loop
+        # print("Finished signup")
+        return signedUp
+
     def greetings(self):
         '''login or signup options'''
         #inpNewOrReturning = self.SuperWaiter.listen("Please say Login if you want to Login, say sign up if you are new")
         while True:
-            self.SuperWaiter.say("Do you want to Order or 'Exit' ")
-            inpNewOrReturning = self.SuperWaiter.listen("Do you want to 'Order' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
-            order = ["order","stay","i would like to order"]
+            # self.SuperWaiter.say("Do you want to Order or 'Exit' ")
+            enterOrExit = self.SuperWaiter.listen("Do you want to 'Order' or 'Exit' ").lower() # CHANGE TO WAITER SAYING THIS AND FUZZY
+            order = ["order","stay","i would like to order"] # fuzzy logic
             leave = ["leave","bye","exit"]
             options = order+leave
-            orderOrExit = self.getOptions(inpNewOrReturning, options=options)
+            orderOrExit = self.getOptions(enterOrExit, options=options)
             if orderOrExit in order:
-                return self.customer.getCusotmerNewOrReturning() 
+                return self.getCustomerNewOrReturning() # calls this
             elif orderOrExit in leave:
                 return self.exit()        
             else:
@@ -97,7 +121,6 @@ class tenOutOfTenRestaurant(SPXCafe):
                 #     foundMeal.display()      
             else:
                 running =False
-        self.options()
         # make a match case senario using fuzzy logic where the waiter listens
         # to what the customer wants
     def courseFuzzy(self):
@@ -109,11 +132,6 @@ class tenOutOfTenRestaurant(SPXCafe):
             choice = self.isMatch(request, course)
             if choice:
                 return course
-
-    def orderHistory(self):
-        '''sends to orderhistory then back to options'''
-        self.customer.history()
-        self.options()
 
     def exit(self):
         '''Exit '''
@@ -156,11 +174,9 @@ class tenOutOfTenRestaurant(SPXCafe):
                 optionRun = False
                 return self.exit()
             elif choice in self.historyRequest[0]:
-                optionRun = False
-                return self.orderHistory()
+                self.customer.history()
             elif choice in self.menuRequest[0]:
-                optionRun = False
-                return self.runMenu()
+                self.runMenu()
             elif choice in self.orderRequest[0]:
                 optionRun = False
                 return self.getFoodOrder()

@@ -6,33 +6,9 @@ class tenOutOfTenCustomer(SPXCafe):
 
     def __init__(self, userName=None, firstName=None, lastName =None, customerId = None):
         '''Constructor method'''
-        super().__init__()
+        super().__init__() #inheritence 
         self.SuperWaiter = Avatar("tenOutOfTenRestaurant Bot")
         self.setCustomerId(customerId=customerId)
-
-    def getCusotmerNewOrReturning(self):
-        '''login or signup'''
-        signedUp = False
-        self.SuperWaiter.say("Please enter your username: ")
-        userName = input("Please enter your username: ").lower() # for accuracy
-        self.setUserName(userName) # sets username
-        if self.existsDBUserName(): # checks if username in database to prevent overlapping 
-            self.setCustomer()
-            self.SuperWaiter.say(f"Welcome back to TenOutOfTenRestraunt by Cree gaming, {self.getFirstName()} {self.getLastName()}!")
-            signedUp = True
-        else:
-            firstName = self.SuperWaiter.say("Please enter your first name: ")
-            firstName = input("Please enter your first name: ").lower() # asks first Name
-            self.setFirstName(firstName)                                # sets first Name
-            self.SuperWaiter.say("Please enter your last name: ")       
-            lastName = input("Please enter your last name: ").lower()   # asks last name .lower()
-            self.setLastName(lastName)                                  # sets last name
-            self.saveCustomer() 
-            self.setCustomer()                                        # adds users to database (saves)
-            self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
-            signedUp = True # ends signup loop
-        # print("Finished signup")
-        return signedUp
 
     def existsDBUserName(self):
         '''check if object already exists in datbase'''
@@ -69,29 +45,33 @@ class tenOutOfTenCustomer(SPXCafe):
             self.customerId = self.dbPutData(sql)
             # self.setCustomerID(self.dbPutData(sql))
 
-    def newOrder(self, basket=None):
+    def newOrder(self, basket=None, customerId=None):
         '''connects to orders to create order'''
         trolley = basket
         if basket:
             self.order = orderItems.orderItems(customer=self)
-            self.orderHS = orderDb.orderDb(self.getCustomerId())
-            self.orderHS.createOrder(customerId=self.getCustomerId(), basket=trolley)
+            if customerId:
+                self.orderHS = orderDb.orderDb(customerId=customerId)
+                self.orderHS.createOrder(customerId=customerId, basket=trolley)
+            else:
+                self.orderHS = orderDb.orderDb(self.getCustomerId())
+                self.orderHS.createOrder(customerId=self.getCustomerId(), basket=trolley)
         else:
             return self.SuperWaiter.say("Please try again.")
         
-    def history(self):
+    def history(self, customerId=None):
         '''connects to orderhistory to check history'''
-        self.orderHS = orderDb.orderDb(self.getCustomerId())
-        if self.orderHS.existDbOrder(self.getCustomerId()):
+        self.orderHS = orderDb.orderDb(customerId=customerId)
+        if self.orderHS.existDbOrder(customerId=customerId):
             self.orderHS.setOrder()
         else:
             self.SuperWaiter.say("You have had no previous orders with us.")
 
-    def exitCustomer(self):
-        '''customer exit'''
-        print("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
-        self.SuperWaiter.say("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
-        return False
+    # def exitCustomer(self):
+    #     '''customer exit'''
+    #     print("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
+    #     self.SuperWaiter.say("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
+    #     return False
 
 # Getters/Setters
     def setCustomer(self): # will have to get customer Id
@@ -117,8 +97,9 @@ class tenOutOfTenCustomer(SPXCafe):
         self.setFirstName(self.firstName)
         self.setLastName(self.lastName)
         self.setCustomerId(self.customerId)
+        return self.getCustomerId()
+    
 
-        return retcode
     def setFirstName(self, firstName = None):
         self.__firstName= firstName
     def setLastName(self, lastName = None):
@@ -136,7 +117,29 @@ class tenOutOfTenCustomer(SPXCafe):
     def getUserName(self):
         return self.__userName
     
-
+    # def getCusotmerNewOrReturning(self):
+    #     '''login or signup'''
+    #     signedUp = False
+    #     self.SuperWaiter.say("Please enter your username: ")
+    #     userName = input("Please enter your username: ").lower() # for accuracy
+    #     self.setUserName(userName) # sets username
+    #     if self.existsDBUserName(): # checks if username in database to prevent overlapping 
+    #         self.setCustomer()
+    #         self.SuperWaiter.say(f"Welcome back to TenOutOfTenRestraunt by Cree gaming, {self.getFirstName()} {self.getLastName()}!")
+    #         signedUp = True
+    #     else:
+    #         firstName = self.SuperWaiter.say("Please enter your first name: ")
+    #         firstName = input("Please enter your first name: ").lower() # asks first Name
+    #         self.setFirstName(firstName)                                # sets first Name
+    #         self.SuperWaiter.say("Please enter your last name: ")       
+    #         lastName = input("Please enter your last name: ").lower()   # asks last name .lower()
+    #         self.setLastName(lastName)                                  # sets last name
+    #         self.saveCustomer() 
+    #         self.setCustomer()                                        # adds users to database (saves)
+    #         self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
+    #         signedUp = True # ends signup loop
+    #     # print("Finished signup")
+    #     return signedUp
 def main():
     '''test harness'''
     customer= tenOutOfTenCustomer(1)
