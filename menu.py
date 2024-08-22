@@ -82,8 +82,13 @@ class Menu(SPXCafe):
     def findCourse(self, searchCourse=None):
         courses = []
         if searchCourse:
+            # print(self.getCourses())
             for course in self.getCourses():
-                courses.append(course.findCourse(searchCourse))
+                # print(course)
+                # courses.append(course.findCourse(searchCourse))
+                main = course.findCourse(searchCourse)
+                if main:
+                    courses.append(main)
         return courses
 
     def setMealList(self, meals):
@@ -101,12 +106,13 @@ def main():
 
     # Find a meal - using fuzzy logic - finds partial
     searchMeal = input("What meal do you want? ")
-    meals = menu.findMeal(searchMeal)
+    meals = menu.findCourse(searchMeal)
     if meals:
         print(f"we have ofund the follow meals:{meals}")
         for meal in meals:
-            for thing in meal:
-                thing.display()
+            meal.display()
+            # for thing in meal:
+            #     thing.display()
     else:
         print(f"{searchMeal}' not found")
     # searchCourse = input("what course do you want? ")

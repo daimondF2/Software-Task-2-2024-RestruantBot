@@ -10,7 +10,7 @@ class orderItems(SPXCafe):
         self.SuperBot = Avatar("tenOutOfTenRestauraunt Bot")
         self.setOrderId(orderId)
         self.menu = menu.Menu()
-        self.orderDb = orderDb.orderDb()
+        # self.orderDb = orderDb.orderDb()
         self.totalPrice = 0
 
     def getOrderItems(self, orderId = None):
@@ -112,27 +112,6 @@ class orderItems(SPXCafe):
                 mealList.append(self.getMealId())
                 mealList.append(self.getMealPrice())
             return mealList
-
-    def displayBasket(self, basket=None):
-        '''Displays basket'''
-        totalOrderPrice = 0
-        if basket:
-            print("|--------------------- Order ---------------------|")
-            for orderItems in basket:
-                totalPrice = 0
-                self.findMealByName(orderItems[0])
-                totalPrice += int(self.getMealPrice())*int(orderItems[1])
-                totalOrderPrice +=totalPrice
-                print(f"Meal: {orderItems[0]} | Quantity: {orderItems[1]} | Total Price: {totalPrice}")
-            print(f"| Total Order Price: {totalOrderPrice} |")
-
-    def checkOut(self, basket=None):
-        '''checkOut system'''
-        customerOrder = basket
-        self.displayBasket(basket=customerOrder)
-        orderConfirm = self.SuperBot.listen("Would you liek to confirm Order? ")
-        if orderConfirm == "yes":
-            self.createOrder(basket=customerOrder)
 
 # getters/ setters
     def setOrderItemId(self, orderItemId=None):

@@ -8,6 +8,7 @@ class orderDb(SPXCafe):
         self.SuperCustomer = Avatar("tenOutOfTenRestaurant Bot")
         self.totalPrice = 0
         self.setCustomerId(customerId)
+        self.orderIte = orderItems.orderItems()
 
     def setOrder(self, customerId = None):
         '''gets order ids and all orders made by customer'''
@@ -25,27 +26,26 @@ class orderDb(SPXCafe):
             ORDER BY orderId
             '''
             # print(sql)
-            orderHSdata = self.dbGetData(sql)
+        orderHSdata = self.dbGetData(sql)
             # print(orderHSdata)
-        if orderHSdata:
-            print("|---------------------- Past Orders ----------------------|")
-            for orders in orderHSdata:
-                self.orderId = orders['orderId']
-                self.orderDate = orders['orderDate']
-                self.customerId = orders['customerId']
-                self.setOrderId(self.orderId)
-                self.setOrderDates(self.orderDate)
-                self.setCustomerId(self.customerId)
+        print("|---------------------- Past Orders ----------------------|")
+        for orders in orderHSdata:
+            self.orderId = orders['orderId']
+            self.orderDate = orders['orderDate']
+            self.customerId = orders['customerId']
+            self.setOrderId(self.orderId)
+            self.setOrderDates(self.orderDate)
+            self.setCustomerId(self.customerId)
                 # print(self.getOrderId())
                 # print(self.getOrderDates())           checks if they worked
                 # print(self.getCustomerId())
-                self.order = orderItems.orderItems(self.getOrderId())
-                datalist = self.order.getOrderItems(self.getOrderId())
+            self.order = orderItems.orderItems(self.getOrderId())
+            datalist = self.order.getOrderItems(self.getOrderId())
                 # Call ORDER factory method to return a list of order objects/instances - pass self to it
-                for data in datalist:
-                    self.setQuantity(data[1])
-                    self.totalPrice += data[3]
-                    self.displayOrders(mealPrice=data[2], mealName = data[0])
+            for data in datalist:
+                self.setQuantity(data[1])
+                self.totalPrice += data[3]
+                self.displayOrders(mealPrice=data[2], mealName = data[0])
         print(f"| Total price: {self.totalPrice} |") # displays total cost
         print("....................")
         
@@ -83,13 +83,13 @@ class orderDb(SPXCafe):
             '''
         self.dbPutData(sql)
         # print(sql)
-        idOrder = self.orderFood()
+        self.orderFood()
         self.orderItem = orderItems.orderItems()
         if basket:
             for orders in basket:
                 mealDataList = self.orderItem.findMealByName(mealName=orders[0])
                 quantity = orders[1]
-                self.orderItem.addOrderItem(mealId=mealDataList[0], quantity=quantity, mealPrice=mealDataList[1], orderId=idOrder)
+                self.orderItem.addOrderItem(mealId=mealDataList[0], quantity=quantity, mealPrice=mealDataList[1], orderId=self.getOrderId())
                 print('FINISHED')
 
 
@@ -105,6 +105,12 @@ class orderDb(SPXCafe):
             self.orderId = data['orderId']
             self.setOrderId(self.orderId)
 
+    def findOrder(self, foodOrder= None):
+        meal = self.orderIte.findOrder(foodOrder=foodOrder)
+        return meal
+    def findMealByName(self, meal = None):
+        food  = self.orderIte.findMealByName(meal)
+        return food
 # getters/ setters
     def setOrderId(self, orderId=None):
         self.__orderId = orderId
