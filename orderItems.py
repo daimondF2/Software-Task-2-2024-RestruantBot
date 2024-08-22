@@ -60,7 +60,7 @@ class orderItems(SPXCafe):
 
     def findOrder(self, meal = None):
         '''finds Order using fuzzy logic'''
-        self.meal =  self.menu.findMeal(meal)
+        self.meal = self.menu.findMeal(meal)
         # print(self.meal)
         self.mealList=[]
         if self.meal:

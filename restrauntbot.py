@@ -6,7 +6,6 @@ from rapidfuzz.process import extract
 from rapidfuzz.utils import default_process
 import menu
 import restrauntCustomer
-import orderItems
 class tenOutOfTenRestaurant(SPXCafe):
     def __init__(self):
         '''Constructor method'''
@@ -16,13 +15,14 @@ class tenOutOfTenRestaurant(SPXCafe):
         # self.nlp = NLPdemo()
         self.callMenu = menu.Menu("TenOutOfTenRestauruant")
         self.match()
-        self.orderInfo = orderItems.orderItems()
+        self.orderMatch()
+        self.menuChoiceRequest()
         self.nlp = NLPdemo()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ TenOutOfTenRestaurant ------------------------")
         self.customer = restrauntCustomer.tenOutOfTenCustomer()
-        # if self.greetings():
-        #     self.options() # if true send to customer options
+        if self.greetings():
+            self.options() # if true send to customer options
 
 # REQUESTS AND FUNCITION
     def getCustomerNewOrReturning(self):
@@ -127,7 +127,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         # to what the customer wants
     def courseFuzzy(self):
         self.callMenu.displayCourses()
-        request = self.SuperWaiter.listen("Which course would you like to look at or would you like to go back to option?")
+        request = self.SuperWaiter.listen("Which course would you like to look at?")
         # courseRequest = input("what course? ").lower() #to do fuzzy
         self.courseList = ["main", "starter", "entree", "dessert", "finisher"]
         for course in self.courseList:
@@ -168,10 +168,11 @@ class tenOutOfTenRestaurant(SPXCafe):
     def options(self):
         '''sends customer to chosen area'''
         print("----------------------- Options ------------------------")
+        print("  Menu   |   Order History  |   Order  |  Exit")
         optionRun = True
         while optionRun == True:
             choice = self.getRequest()
-            print(choice)
+            # print(choice)
             if choice in self.exitRequest["keywords"]:
                 optionRun = False
                 return self.exit()
@@ -231,9 +232,9 @@ class tenOutOfTenRestaurant(SPXCafe):
                         self.customer.delBasket()
                         ordering = False
                         self.options()
-                elif continueOrder in self.optionsRequest[0]:
+                elif continueOrder in self.optionsRequest[0] or self.checkoutRequest[0]:
                     ordering = False
-        if self.basket:
+        if continueOrder in self.checkoutRequest[0]:
             self.customer.newOrder()
         else:
             self.options()
@@ -308,7 +309,7 @@ class tenOutOfTenRestaurant(SPXCafe):
     def menuChoiceRequest(self):
         '''Key words for menu'''
         self.coursesRequest =      [["course","see the courses","see course","courses"],                            "see the courses"]
-        self.menuRequest =   [["menu", "see the menu", "full menu"],                           "see the menu"]
+        self.menuRequest =   [["menu", "see the menu", "full menu", "whole menu"],                           "see the menu"]
         self.findMealRequest =      [["find a meal", "meal", " find meal"],     "find a meal"]
         # self.checkoutRequest =     [["finish", "check out","buy", "pay"],                           "checkout"]
         self.menuOptions = self.coursesRequest[0] + self.menuRequest[0] + self.findMealRequest[0] + self.checkoutRequest[0]
@@ -332,10 +333,16 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.customer.displayBasket()
 def main():
     test = tenOutOfTenRestaurant()
-    test.basketTester()
+    # test.basketTester()
     # print(test)
     '''TO TEST '''
-
+    '''
+    MENU FUNC
+    FOOD ORDER FUNC
+    UPDATE IMAGE OF UML CLASS DIAGRAM
+    DATA FLOW DIAGRAM DO
+    DO SOME OTHER THINGS
+    '''
 
 if __name__=="__main__":
     main()        

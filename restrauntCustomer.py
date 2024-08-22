@@ -43,7 +43,7 @@ class tenOutOfTenCustomer(SPXCafe):
         else:
             sql = f'''INSERT INTO customers (userName, firstName, lastName) VALUES
                 ('{self.getUserName()}','{self.getFirstName()}','{self.getLastName()}')'''
-            print(sql)
+            # print(sql)
             self.customerId = self.dbPutData(sql)
             # self.setCustomerID(self.dbPutData(sql))
 
@@ -51,7 +51,8 @@ class tenOutOfTenCustomer(SPXCafe):
         '''connects to orders to create order'''
         self.orderHS.createOrder(customerId=self.getCustomerId(), basket=self.getBasket())
     def findOrder(self,orderFood = None):
-        meal = self.orderHS.findOrder(orderFood=orderFood)
+        Food = orderFood
+        meal = self.orderHS.findOrder(Food)
         return meal
     def history(self, customerId=None):
         '''connects to orderhistory to check history'''
@@ -86,7 +87,7 @@ class tenOutOfTenCustomer(SPXCafe):
             self.createOrder(basket=customerOrder)
 
 # Getters/Setters
-    def setCustomer(self, userName): # will have to get customer Id
+    def setCustomer(self): # will have to get customer Id
         '''use this to get customer id for orders !!!!!!  '''
         customerData = None
         if self.getUserName():
@@ -96,13 +97,13 @@ class tenOutOfTenCustomer(SPXCafe):
                 WHERE userName = '{self.getUserName()}'
                 ORDER BY customerId
                 '''
-        if userName:
-            sql = f'''
-                SELECT customerId, userName, firstName, lastName
-                FROM customers
-                WHERE userName = '{userName}'
-                ORDER BY customerId
-                '''
+        # if userName:
+        #     sql = f'''
+        #         SELECT customerId, userName, firstName, lastName
+        #         FROM customers
+        #         WHERE userName = '{userName}'
+        #         ORDER BY customerId
+        #         '''
         # print(sql)
         customerData = self.dbGetData(sql)
         # print(customerData)

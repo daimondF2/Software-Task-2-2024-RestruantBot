@@ -106,7 +106,8 @@ class orderDb(SPXCafe):
             self.setOrderId(self.orderId)
 
     def findOrder(self, foodOrder= None):
-        meal = self.orderIte.findOrder(foodOrder=foodOrder)
+        food =foodOrder
+        meal = self.orderIte.findOrder(food)
         return meal
     def findMealByName(self, meal = None):
         food  = self.orderIte.findMealByName(meal)
