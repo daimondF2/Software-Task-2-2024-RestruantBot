@@ -96,7 +96,13 @@ class Menu(SPXCafe):
     
     def getMealList(self):
         return self.__MealList
+    def findMealName(self, mealId):
+        mealID =mealId
+        mealName = Course().findMealName(mealID)
+        return mealName
 
+    # def findMealName(self, mealName = None):
+        
 def main():
     '''test harness sure all methods work'''
     menu = Menu("The idiot")
@@ -106,7 +112,7 @@ def main():
 
     # Find a meal - using fuzzy logic - finds partial
     searchMeal = input("What meal do you want? ")
-    meals = menu.findCourse(searchMeal)
+    meals = menu.findMeal(searchMeal)
     if meals:
         print(f"we have ofund the follow meals:{meals}")
         for meal in meals:

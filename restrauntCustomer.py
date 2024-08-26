@@ -11,6 +11,10 @@ class tenOutOfTenCustomer(SPXCafe):
         self.setCustomerId(customerId=customerId)
         self.__basket = [] # basket stuff
         self.setUserName(userName)
+        self.setFirstName(firstName)
+        self.setLastName(lastName)
+        if self.existsDBUserName():
+            self.setCustomer()
 
     def existsDBUserName(self):
         '''check if object already exists in datbase'''
@@ -50,22 +54,31 @@ class tenOutOfTenCustomer(SPXCafe):
     def newOrder(self, basket=None, customerId=None):
         '''connects to orders to create order'''
         self.orderHS.createOrder(customerId=self.getCustomerId(), basket=self.getBasket())
+
     def findOrder(self,orderFood = None):
+        '''finds a meal to add to order'''
         Food = orderFood
         meal = self.orderHS.findOrder(Food)
         return meal
-    def history(self, customerId=None):
-        '''connects to orderhistory to check history'''
-        if self.orderHS.existDbOrder(customerId=self.getCustomerId()):
-            self.orderHS.setOrder()
-        else:
-            self.SuperWaiter.say("You have had no previous orders with us.")
 
-    # def exitCustomer(self):
-    #     '''customer exit'''
-    #     print("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
-    #     self.SuperWaiter.say("Thank you for coming TenOutOfTenRestraunt we hope to see you again")
-    #     return False
+    def displayOrderHistory(self):
+        '''connects to orderhistory to check history'''
+        print("|---------------------- Past Orders ----------------------|")
+        for orders in self.getOrderHistory():
+            total = 0
+            print(f"Order Date: {orders.getOrderDates()}")
+            for orderitems in orders.getAllOrder():
+                orderitems.display()
+                total += orderitems.getMealPrice() * orderitems.getQuantity()
+            print(f"Order total: {total}")
+            print("-"*38)
+
+        # if self.orderHS.existDbOrder(customerId=self.getCustomerId()):
+        #     for orders in self.getOrderHistory():
+        #         orders.display()
+        # else:
+        #     self.SuperWaiter.say("You have had no previous orders with us.")
+
     def displayBasket(self, basket=None):
         '''Displays basket'''
         totalOrderPrice = 0
@@ -82,12 +95,12 @@ class tenOutOfTenCustomer(SPXCafe):
         '''checkOut system'''
         customerOrder = self.getBasket()
         self.displayBasket()
-        orderConfirm = self.SuperWaiter.listen("Would you liek to confirm Order? ")
-        if orderConfirm == "yes":
+        orderConfirm = self.SuperWaiter.listen("Would you like to confirm Order? ").lower()
+        if orderConfirm == "yes" or "yeh":
             self.createOrder(basket=customerOrder)
 
 # Getters/Setters
-    def setCustomer(self): # will have to get customer Id
+    def setCustomer(self, userName = None, userId =None): # will have to get customer Id
         '''use this to get customer id for orders !!!!!!  '''
         customerData = None
         if self.getUserName():
@@ -96,14 +109,14 @@ class tenOutOfTenCustomer(SPXCafe):
                 FROM customers
                 WHERE userName = '{self.getUserName()}'
                 ORDER BY customerId
+                 '''
+        elif userName:
+            sql = f'''
+                SELECT customerId, userName, firstName, lastName
+                FROM customers
+                WHERE userName = '{userName}'
+                ORDER BY customerId
                 '''
-        # if userName:
-        #     sql = f'''
-        #         SELECT customerId, userName, firstName, lastName
-        #         FROM customers
-        #         WHERE userName = '{userName}'
-        #         ORDER BY customerId
-        #         '''
         # print(sql)
         customerData = self.dbGetData(sql)
         # print(customerData)
@@ -119,8 +132,8 @@ class tenOutOfTenCustomer(SPXCafe):
         self.setLastName(self.lastName)
         self.setCustomerId(self.customerId)
         self.orderHS = orderDb.orderDb(customerId=self.getCustomerId())
+        self.setOrderHistory(self.orderHS.getOrders(self.getCustomerId()))
         return self.getCustomerId()
-    
 
     def setFirstName(self, firstName = None):
         self.__firstName= firstName
@@ -144,39 +157,25 @@ class tenOutOfTenCustomer(SPXCafe):
         return self.__basket
     def delBasket(self):
         self.__basket = []
+    def setOrderHistory(self, orders = None):
+        if orders:
+            self.__orders = orders
+        else:
+            self.__orders = []
+    def getOrderHistory(self):
+        return self.__orders
 
-    
-    # def getCusotmerNewOrReturning(self):
-    #     '''login or signup'''
-    #     signedUp = False
-    #     self.SuperWaiter.say("Please enter your username: ")
-    #     userName = input("Please enter your username: ").lower() # for accuracy
-    #     self.setUserName(userName) # sets username
-    #     if self.existsDBUserName(): # checks if username in database to prevent overlapping 
-    #         self.setCustomer()
-    #         self.SuperWaiter.say(f"Welcome back to TenOutOfTenRestraunt by Cree gaming, {self.getFirstName()} {self.getLastName()}!")
-    #         signedUp = True
-    #     else:
-    #         firstName = self.SuperWaiter.say("Please enter your first name: ")
-    #         firstName = input("Please enter your first name: ").lower() # asks first Name
-    #         self.setFirstName(firstName)                                # sets first Name
-    #         self.SuperWaiter.say("Please enter your last name: ")       
-    #         lastName = input("Please enter your last name: ").lower()   # asks last name .lower()
-    #         self.setLastName(lastName)                                  # sets last name
-    #         self.saveCustomer() 
-    #         self.setCustomer()                                        # adds users to database (saves)
-    #         self.SuperWaiter.say(f"Welcome to TenOutOfTenRestraunt by Cree gaming, {firstName.title()} {lastName.title()}!") #Welcomes customer
-    #         signedUp = True # ends signup loop
-    #     # print("Finished signup")
-    #     return signedUp
 def main():
     '''test harness'''
-    customer= tenOutOfTenCustomer(1)
-    customer.setBasket(meal="steak",quantity=3)
-    print(customer.getBasket())
-    customer.setCustomer('diamondf')
-    customer.displayBasket()
-    customer.newOrder()
+    customer= tenOutOfTenCustomer()
+    customer.setCustomer(userName='diamondf')
+    # customer.setBasket(meal="steak",quantity=3)
+    # customer.setBasket(meal='streak',quantity=2)
+    # print(customer.getBasket())
+    # customer.setCustomer('diamondf')
+    # customer.displayBasket()
+    # customer.history()
+    # customer.newOrder()
 
     # customer.getCusotmerNewOrReturning()
     # customer.newOrder()

@@ -161,9 +161,35 @@ class Meal(SPXCafe):
             return True
         else:
             return False
-    
+
+    # def findMealByName(self, mealName=None):
+    #     '''find Meals using there Names'''
+    #     mealList = []
+    #     sql = None
+    #     if mealName:
+    #         sql = f"SELECT mealId, mealName, mealPrice, courseId FROM meals WHERE mealName = '{mealName}'"
+    #         mealData = self.dbGetData(sql)
+    #         for meals in mealData:
+    #             self.setMealId(meals['mealId'])
+    #             self.setMealPrice(meals['mealPrice'])
+    #             mealList.append(self.getMealId())
+    #             mealList.append(self.getMealPrice())
+    #         return mealList
+    def findMealName(self, mealId = None):
+        '''gets the mealName form mealId'''
+        sql = None
+        sql = f'''SELECT mealId, mealName, mealPrice, courseId 
+            FROM meals 
+            WHERE mealId = '{mealId}'
+            ORDER BY mealId
+            '''
+        mealData = self.dbGetData(sql)
+        for meals in mealData:
+            self.setMealName(meals['mealName'])
+        return self.getMealName()
 def main():
-    meal = Meal()       # retrieve existiing meal
+    meal = Meal(1)       # retrieve existiing meal
+    meal.display()
     # meal.display()              #show existing values
     # meal.setMealPrice(meal.getMealPrice()+1) #update meal data demo
     # meal.save()                 #save meal again from Db
