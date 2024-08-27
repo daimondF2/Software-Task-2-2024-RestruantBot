@@ -12,8 +12,7 @@ class orderDb(SPXCafe):
         self.setOrderId(orderId)
         # self.orderItem = orderItems.orderItems()
         self.__orders = []
-        if self.existDbOrder():
-            self.setOrder()
+            # self.setOrder()
             # if not self.setOrder(self.__orderId):
             #     print(f"Course: Course Id <{self.getCourseId()}> is invalid")
         # print(self.getCustomerId())
@@ -89,31 +88,32 @@ class orderDb(SPXCafe):
         '''creates order'''
         sql = None
         # print(self.__orderDate, customerId)
-        sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.getToday()}','diamondf')
+        sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.getToday()}','{self.getCustomerId()}')
             '''
         self.setOrderId(self.dbPutData(sql))
-        print(self.setOrderId())
+        # print(self.setOrderId())
         # print(sql)
-        self.orderFood()
         if basket:
             for orders in basket:
                 mealDataList = orders[0]
+                # print(mealDataList)
                 quantity = orders[1]
-                self.order.addOrderItem(mealId=mealDataList, quantity=quantity, mealPrice=mealDataList[1], orderId=self.getOrderId())
+                # print(quantity)
+                self.order.addOrderItem(mealId=mealDataList[0], quantity=quantity, mealPrice=mealDataList[1], orderId=self.getOrderId())
                 print('FINISHED')
 
 
-    def orderFood(self):
-        '''gets the order id by using order date'''
-        sql = None
-        sql = f'''SELECT orderId, orderDate, customerId 
-            FROM Orders 
-            WHERE orderDate = '{self.getToday()}'
-            ORDER BY orderId '''
-        orderData = self.dbGetData(sql)
-        for data in orderData:
-            self.orderId = data['orderId']
-            self.setOrderId(self.orderId)
+    # def orderFood(self):
+    #     '''gets the order id by using order date'''
+    #     sql = None
+    #     sql = f'''SELECT orderId, orderDate, customerId 
+    #         FROM Orders 
+    #         WHERE orderDate = '{self.getToday()}'
+    #         ORDER BY orderId '''
+    #     orderData = self.dbGetData(sql)
+    #     for data in orderData:
+    #         self.orderId = data['orderId']
+    #         self.setOrderId(self.orderId)
 # getters/ setters
     def setOrderId(self, orderId=None):
         self.__orderId = orderId

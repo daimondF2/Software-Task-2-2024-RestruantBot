@@ -20,8 +20,8 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.nlp = NLPdemo()
         # if customer log in in database start this else try again so a while true loop
         print("------------------------ TenOutOfTenRestaurant ------------------------")
-        # if self.greetings():
-        #     self.options() # if true send to customer options
+        if self.greetings():
+            self.options() # if true send to customer options
 
 # REQUESTS AND FUNCITION
     def getCustomerNewOrReturning(self):
@@ -152,34 +152,34 @@ class tenOutOfTenRestaurant(SPXCafe):
         # ORDER WORDS
     def options(self):
         '''sends customer to chosen area'''
-        # print("----------------------- Options ------------------------")
-        # print("|  Menu   |   Order History  |   Order   |   Exit   |")
-        # optionRun = True
-        # while optionRun == True:
-        #     choice = self.getRequest()
-        #     # print(choice)
-        #     if choice in self.exitRequest["keywords"]:
-        #         optionRun = False
-        #         return self.exit()
-        #     elif choice in self.historyRequest[0]:
-        #         self.customer.displayOrderHistory()
-        #     elif choice in self.menuRequest[0]:
-        #         self.runMenu()
-        #     elif choice in self.orderRequest[0]:
-        #         optionRun = False
-        #         return self.getFoodOrder()
+        print("----------------------- Options ------------------------")
+        print("|  Menu   |   Order History  |   Order   |   Exit   |")
+        optionRun = True
+        while optionRun == True:
+            choice = self.getRequest()
+            # print(choice)
+            if choice in self.exitRequest["keywords"]:
+                optionRun = False
+                return self.exit()
+            elif choice in self.historyRequest[0]:
+                self.customer.displayOrderHistory()
+            elif choice in self.menuRequest[0]:
+                self.runMenu()
+            elif choice in self.orderRequest[0]:
+                optionRun = False
+                return self.getFoodOrder()
         # option = self.SuperWaiter.listen("|Menu|       |Order History|       |Order|       |Exit|", useSR=False)
-        self.customer = restrauntCustomer.tenOutOfTenCustomer(userName='diamondf')
-        option = input("Menu, order history, order, exit: ").lower()
-        if option == "menu":
-            self.runMenu()
-        if option == "history":
-            self.customer.displayOrderHistory()
-        if option == "order":
-            self.getFoodOrder()
-        if option == "Exit":
-            self.exit()
-        choice = self.getOptions(option, self.mainOptions)
+        # self.customer = restrauntCustomer.tenOutOfTenCustomer(userName='diamondf')
+        # option = input("Menu, order history, order, exit: ").lower()
+        # if option == "menu":
+        #     self.runMenu()
+        # if option == "history":
+        #     self.customer.displayOrderHistory()
+        # if option == "order":
+        #     self.getFoodOrder()
+        # if option == "Exit":
+        #     self.exit()
+        # choice = self.getOptions(option, self.mainOptions)
     def getFoodOrder(self):
         '''gets food orders'''
         totalItems = 0 
@@ -375,12 +375,11 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.customer.checkOut()
 def main():
     test = tenOutOfTenRestaurant()
-    test.basketTester()
+    # test.basketTester()
     # test.basketTester()
     # print(test)
     '''TO TEST '''
     '''
-    MENU FUNC
     FOOD ORDER FUNC
     UPDATE IMAGE OF UML CLASS DIAGRAM
     DATA FLOW DIAGRAM DO

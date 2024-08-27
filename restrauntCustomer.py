@@ -55,14 +55,17 @@ class tenOutOfTenCustomer(SPXCafe):
     def displayOrderHistory(self):
         '''connects to orderhistory to check history'''
         print("|---------------------- Past Orders ----------------------|")
-        for orders in self.getOrderHistory():
-            total = 0
-            print(f"Order Date: {orders.getOrderDates()}")
-            for orderitems in orders.getAllOrder():
-                orderitems.display()
-                total += orderitems.getMealPrice() * orderitems.getQuantity()
-            print(f"Order total: {total}")
-            print("-"*38)
+        if self.orderHS.existDbOrder():
+            for orders in self.getOrderHistory():
+                total = 0
+                print(f"Order Date: {orders.getOrderDates()}")
+                for orderitems in orders.getAllOrder():
+                    orderitems.display()
+                    total += orderitems.getMealPrice() * orderitems.getQuantity()
+                print(f"Order total: {total}")
+                print("-"*38)
+        else:
+            print("You have had no previous orders with us!")
 
         # if self.orderHS.existDbOrder(customerId=self.getCustomerId()):
         #     for orders in self.getOrderHistory():
@@ -89,7 +92,7 @@ class tenOutOfTenCustomer(SPXCafe):
         # orderConfirm = self.SuperWaiter.listen("Would you like to confirm Order? ").lower()
         orderConfirm =input("yes? ")
         if orderConfirm == "yes" or "yeh":
-            self.orderHS.createOrder(customerId=self.getCustomerId(), basket=self.getBasket())
+            self.orderHS.createOrder(basket=self.getBasket())
 
 # Getters/Setters
     def setCustomer(self, userName = None, userId =None): # will have to get customer Id
