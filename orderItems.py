@@ -8,15 +8,14 @@ class orderItems(SPXCafe):
         super().__init__()
         self.SuperBot = Avatar("tenOutOfTenRestauraunt Bot")
         self.setOrder(order)
-        self.menu = menu.Menu()
         # self.orderDb = orderDb.orderDb()
         self.totalPrice = 0
         self.setMealId(mealId)
         self.setMealPrice(mealPrice)
         self.setQuantity(quantity)
-        if self.existsDB():
-            if not self.setOrderItems(self):
-                print(f"order: {mealId}")
+        # if self.existsDB():
+        #     if not self.setOrderItems(self):
+        #         print(f"order: {mealId}")
 
     def setOrderItems(self, orderId = None):
         '''Finds the orders from orderId'''
@@ -50,20 +49,6 @@ class orderItems(SPXCafe):
             dataList.append([self.getMealName(), self.getQuantity(), self.getMealPrice(), self.totalPrice])
         return dataList
         
-    def findMealName(self, mealId=None):
-        '''gets the mealName from mealId'''
-        mealID = mealId
-        mealName  = self.menu.findMealName(mealId=mealID)
-        self.setMealName(mealName)
-        # sql = None
-        # sql = f'''SELECT mealId, mealName, mealPrice, courseId 
-        #     FROM meals 
-        #     WHERE mealId = '{self.getMealId()}'
-        #     ORDER BY mealId
-        #     '''
-        # mealData = self.dbGetData(sql)
-        # for meals in mealData:
-        #     self.setMealName(meals['mealName'])
     def existsDB(self, orderItemsId):
         retcode = False
         sql =None
@@ -124,43 +109,6 @@ class orderItems(SPXCafe):
         sql = f'''INSERT INTO orderItems (orderId, mealId, quantity, mealPrice) VALUES ('{orderId}','{mealId}','{quantity}','{mealPrice}')'''
         self.dbPutData(sql)
 
-    def findMealByName(self, mealName=None):
-        '''find Meals using there Names'''
-        mealList = self.menu.findMeal(mealName)
-        mealData = []
-        if len(mealList) >1:
-            for meals in mealList[0]:
-                mealData.append(meals.getMealId())
-                mealData.append(meals.getMealPrice())
-                print(mealData)
-                return mealData
-                # if len(course.getMealName()) > 1:
-                #     print(course.getMealName())
-                # else:
-                #     for meals in course:
-                #         print(meals.getMealName())
-        else:
-            for meals in mealList[0]:
-                mealData.append(meals.getMealId())
-                mealData.append(meals.getMealPrice())
-                return mealData
-                # print(course)
-                # if len(course) > 1:
-                #     print(course[0].getMealName())
-                # else:
-                #     for meals in course:
-                #         print(meals.getMealName()    
-    #     mealList = []
-    #     sql = None
-    #     if mealName:
-    #         sql = f"SELECT mealId, mealName, mealPrice, courseId FROM meals WHERE mealName = '{mealName}'"
-    #         mealData = self.dbGetData(sql)
-    #         for meals in mealData:
-    #             self.setMealId(meals['mealId'])
-    #             self.setMealPrice(meals['mealPrice'])
-    #             mealList.append(self.getMealId())
-    #             mealList.append(self.getMealPrice())
-    #         return mealList
 
 # getters/ setters
     def setOrderItemId(self, orderItemId=None):
@@ -203,7 +151,6 @@ class orderItems(SPXCafe):
         return self.__meal
 def main():
     x=orderItems(1)
-    basker = 'a salad'
-    print(x.getOrderItems(1))
+    x.findMealId('steak')
 if __name__ == "__main__":
     main()

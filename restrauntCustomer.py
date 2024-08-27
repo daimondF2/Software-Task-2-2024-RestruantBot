@@ -51,15 +51,6 @@ class tenOutOfTenCustomer(SPXCafe):
             self.customerId = self.dbPutData(sql)
             # self.setCustomerID(self.dbPutData(sql))
 
-    def newOrder(self, basket=None, customerId=None):
-        '''connects to orders to create order'''
-        self.orderHS.createOrder(customerId=self.getCustomerId(), basket=self.getBasket())
-
-    def findOrder(self,orderFood = None):
-        '''finds a meal to add to order'''
-        Food = orderFood
-        meal = self.orderHS.findOrder(Food)
-        return meal
 
     def displayOrderHistory(self):
         '''connects to orderhistory to check history'''
@@ -85,19 +76,20 @@ class tenOutOfTenCustomer(SPXCafe):
         print("|--------------------- Order ---------------------|")
         for orderItems in self.getBasket():
             totalPrice = 0
-            mealData = self.orderHS.findMealByName(orderItems[0])
+            mealData = orderItems[0]
             totalPrice += int(mealData[1])*int(orderItems[1])
             totalOrderPrice +=totalPrice
-            print(f"Meal: {orderItems[0]} | Quantity: {orderItems[1]} | Total Price: {totalPrice} | Single Meal Price: {mealData[1]}")
+            print(f"Meal: {orderItems[2]} | Quantity: {orderItems[1]} | Total Price: {totalPrice} | Single Meal Price: {mealData[1]}")
         print(f"| Total Order Price: {totalOrderPrice} |")
 
     def checkOut(self):
         '''checkOut system'''
         customerOrder = self.getBasket()
         self.displayBasket()
-        orderConfirm = self.SuperWaiter.listen("Would you like to confirm Order? ").lower()
+        # orderConfirm = self.SuperWaiter.listen("Would you like to confirm Order? ").lower()
+        orderConfirm =input("yes? ")
         if orderConfirm == "yes" or "yeh":
-            self.createOrder(basket=customerOrder)
+            self.orderHS.createOrder(customerId=self.getCustomerId(), basket=self.getBasket())
 
 # Getters/Setters
     def setCustomer(self, userName = None, userId =None): # will have to get customer Id
@@ -151,8 +143,8 @@ class tenOutOfTenCustomer(SPXCafe):
         return self.__lastName
     def getUserName(self):
         return self.__userName
-    def setBasket(self, meal, quantity):
-        self.__basket.append([meal, quantity])
+    def setBasket(self, meal, quantity, mealName):
+        self.__basket.append([meal, quantity, mealName])
     def getBasket(self):
         return self.__basket
     def delBasket(self):
@@ -174,7 +166,7 @@ def main():
     # print(customer.getBasket())
     # customer.setCustomer('diamondf')
     # customer.displayBasket()
-    # customer.history()
+    customer.displayOrderHistory()
     # customer.newOrder()
 
     # customer.getCusotmerNewOrReturning()

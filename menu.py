@@ -115,7 +115,7 @@ def main():
     meals = menu.findMeal(searchMeal)
     if meals:
         print(f"we have ofund the follow meals:{meals}")
-        for meal in meals:
+        for meal in meals[0]:
             meal.display()
             # for thing in meal:
             #     thing.display()

@@ -175,18 +175,18 @@ class Meal(SPXCafe):
     #             mealList.append(self.getMealId())
     #             mealList.append(self.getMealPrice())
     #         return mealList
-    def findMealName(self, mealId = None):
-        '''gets the mealName form mealId'''
-        sql = None
-        sql = f'''SELECT mealId, mealName, mealPrice, courseId 
-            FROM meals 
-            WHERE mealId = '{mealId}'
-            ORDER BY mealId
-            '''
-        mealData = self.dbGetData(sql)
-        for meals in mealData:
-            self.setMealName(meals['mealName'])
-        return self.getMealName()
+    # def findMealName(self, mealId = None):
+    #     '''gets the mealName form mealId'''
+    #     sql = None
+    #     sql = f'''SELECT mealId, mealName, mealPrice, courseId 
+    #         FROM meals 
+    #         WHERE mealId = '{mealId}'
+    #         ORDER BY mealId
+    #         '''
+    #     mealData = self.dbGetData(sql)
+    #     for meals in mealData:
+    #         self.setMealName(meals['mealName'])
+    #     return self.getMealName()
 def main():
     meal = Meal(1)       # retrieve existiing meal
     meal.display()

@@ -93,21 +93,11 @@ class tenOutOfTenRestaurant(SPXCafe):
                     self.SuperWaiter.say("Cannot find Course")
                 running = False             # ask for what course or go back # to go back call a function that recalls the function
             elif menuRQ in self.findMealRequest[0]:
-                # areaRequest = self.SuperWaiter.listen("Do you want to find a Meal in a course or a Meal from the entire menu?")
-                # if areaRequest == 'course':
-                #     pass
-                # elif areaRequest == 'menu':
                     # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
                 searchMeal = input("what meal you want to find: ")
+                self.findMeal(searchMeal, menuVer=True) #find meal function
+                running =  False
                     # find all meals
-                meals = self.callMenu.findMeal(searchMeal) # finds Meal
-                if meals:
-                    for course in meals:
-                        for meal in course:
-                            meal.display() # displays Meal
-                    running = False
-                else:
-                    print(f"{searchMeal}' not found")
                 # find meal in a course
                 # if self.mealInfo.isMatch(searchMeal):
                 #     print('match')
@@ -195,12 +185,12 @@ class tenOutOfTenRestaurant(SPXCafe):
         totalItems = 0 
         ordering = True
         while ordering == True:
-            print("what do you want to order")
+            # print("what do you want to order")
             foodOrder = self.SuperWaiter.listen("What do you want to order? ")
             orderFood = self.nlp.getMealByType(foodOrder)
-            # print(foodOrder)
-            # foodOrder = input("What do you want to order? ")
-            self.meal = self.customer.findOrder(orderFood)
+            # # print(foodOrder)
+            # orderFood = input("What do you want to order? ")
+            self.meal = self.findMeal(orderFood)
             if self.meal == False:
                 self.SuperWaiter.say("We failed to find your meal please try again")
                 print("Failed to find Meal!")
@@ -210,7 +200,7 @@ class tenOutOfTenRestaurant(SPXCafe):
                 # say a number it either turns out to 
                 # be a word or a number (I dont want to have to make something convert it for me
                 quantity = input("What amount? ")
-                self.customer.setBasket(self.meal, quantity)           # find the meal then add to basket # print(self.basket)
+                self.customer.setBasket(self.findMealId(self.meal), quantity, self.meal)           # find the meal then add to basket # print(self.basket)
                 self.customer.displayBasket()
                 totalItems += int(quantity)
                 # continueOrder = self.SuperWaiter.listen("Would you like to continue Ordering or go back options or abandon order: ") # TO DO FuZZY ADD KEY WORDS
@@ -231,59 +221,65 @@ class tenOutOfTenRestaurant(SPXCafe):
                 elif continueOrder in self.optionsRequest[0] or self.checkoutRequest[0]:
                     ordering = False
         if continueOrder in self.checkoutRequest[0]:
-            self.customer.newOrder()
+            self.customer.checkOut()
         else:
             self.options()
         # if self.order == False:
         #     self.getRequest()
         # else:
         #     print("done")
-    def findOrder(self, meal = None):
-        '''finds Order using fuzzy logic'''
-        self.meal = self.menu.findMeal(meal)
-        # print(self.meal)
-        self.mealList=[]
-        if self.meal:
-            for courses in self.meal:
-                for meals in courses:
-                    print(f"We found {meals}")
-                    self.mealList.append(meals.getMealName())
-                    # print(self.mealList)
+    def findMealId(self, mealName=None):
+        '''find Meals using there Names'''
+        mealList = self.callMenu.findMeal(mealName)
+        mealData = []
+        if len(mealList) >1:
+            for meals in mealList[0]:
+                mealData.append(meals.getMealId())
+                mealData.append(meals.getMealPrice())
+                # mealData.append(meals.getMealName())
+                print(mealData)
+                return mealData
         else:
-            return False
-        if len(self.meal) > 1:
-            # exactMeal = self.SuperBot.listen(f"Which {meal} do you want?")
-            exactMeal = input(f"Which {meal} do you want? ")
-            for food in self.mealList:
-                if self.isMatch(exactMeal, food):
-                    self.SuperBot.say(f"You have chosen {food}")
+            for meals in mealList[0]:
+                mealData.append(meals.getMealId())
+                mealData.append(meals.getMealPrice())
+                # mealData.append(meals.getMealName())
+                return mealData
+
+    def findMeal(self, meal = None, menuVer = False):
+        '''finds meal using fuzzy logic'''
+        if menuVer == True:
+            meals = self.callMenu.findMeal(meal) # finds Meal
+            if meals:
+                for course in meals:
+                    for meal in course:
+                        meal.display() # displays Meal
+            else:
+                    print(f"{meal}' not found")
+        else:
+            self.meal = self.callMenu.findMeal(meal)
+            # print(self.meal)
+            self.mealList=[]
+            if self.meal:
+                for courses in self.meal:
+                    for meals in courses:
+                        print(f"We found {meals}")
+                        self.mealList.append(meals.getMealName()) # gets meal stuff
+                        # print(self.mealList)
+            else:
+                return False
+            if len(self.meal) > 1: # for more than 1 get the first 1 
+                # exactMeal = self.SuperBot.listen(f"Which {meal} do you want?")
+                exactMeal = input(f"Which {meal} do you want? ")
+                for food in self.mealList:
+                    if self.isMatch(exactMeal, food):
+                        self.SuperWaiter.say(f"You have chosen {food}") 
+                        return food
+                    else:
+                        print(f"{food} did not match")
+            else:
+                for food in self.mealList:
                     return food
-                else:
-                    print(f"{food} is did not match")
-        else:
-            for food in self.mealList:
-                return food
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     def orderMatch(self):
         '''Key words for order'''
@@ -370,18 +366,16 @@ class tenOutOfTenRestaurant(SPXCafe):
     def getCustomerId(self):
         return self.__customerId 
 
-
-
-
-
     def basketTester(self):
+        self.customer = restrauntCustomer.tenOutOfTenCustomer()
         self.customer.setCustomer('diamondf')
-        self.customer.setBasket("steak", 3)           # find the meal then add to basket 
+        self.customer.setBasket(self.findMealId("steak"), 3, "steak")           # find the meal then add to basket 
         print(self.customer.getBasket())
         self.customer.displayBasket()
+        self.customer.checkOut()
 def main():
     test = tenOutOfTenRestaurant()
-    test.options()
+    test.basketTester()
     # test.basketTester()
     # print(test)
     '''TO TEST '''

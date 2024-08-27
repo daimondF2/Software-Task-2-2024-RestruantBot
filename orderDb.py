@@ -89,16 +89,17 @@ class orderDb(SPXCafe):
         '''creates order'''
         sql = None
         # print(self.__orderDate, customerId)
-        sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.getToday()}','{self.getCustomerId()}')
+        sql = f'''INSERT INTO Orders (orderDate, customerId) VALUES ('{self.getToday()}','diamondf')
             '''
-        self.dbPutData(sql)
+        self.setOrderId(self.dbPutData(sql))
+        print(self.setOrderId())
         # print(sql)
         self.orderFood()
         if basket:
             for orders in basket:
-                mealDataList = self.orderItem.findMealByName(mealName=orders[0])
+                mealDataList = orders[0]
                 quantity = orders[1]
-                self.orderItem.addOrderItem(mealId=mealDataList[0], quantity=quantity, mealPrice=mealDataList[1], orderId=self.getOrderId())
+                self.order.addOrderItem(mealId=mealDataList, quantity=quantity, mealPrice=mealDataList[1], orderId=self.getOrderId())
                 print('FINISHED')
 
 
@@ -113,16 +114,6 @@ class orderDb(SPXCafe):
         for data in orderData:
             self.orderId = data['orderId']
             self.setOrderId(self.orderId)
-
-    def findOrder(self, foodOrder= None):
-        '''finds a meal to add to order'''
-        food =foodOrder
-        meal = self.order.findOrder(food)
-        return meal
-    def findMealByName(self, meal = None):
-        '''finds meal by name - to order items basicall for facade pattern'''
-        food  = self.order.findMealByName(meal)
-        return food
 # getters/ setters
     def setOrderId(self, orderId=None):
         self.__orderId = orderId
@@ -193,7 +184,7 @@ class orderDb(SPXCafe):
 def main():
     '''test harness'''
     orderHS= orderDb(customerId=1)
-    orderHS.display()
+    orderHS.createOrder()
     # orderHS.orderHistory()
     # orderHs.display()
     
