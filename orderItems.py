@@ -89,7 +89,7 @@ class orderItems(SPXCafe):
         return orders
      
     def display(self):
-        print(f"| meal: {self.getMeal().getMealName()} | Quantity: {self.getQuantity()} | Price: ${self.getMealPrice()} |")
+        print(f"|OrderItemID: {self.getOrderItemId()}| meal: {self.getMeal().getMealName()} | Quantity: {self.getQuantity()} | Price: ${self.getMealPrice()} |")
     def __str__(self):
         '''different variation to .display()'''
         return f"| meal: {self.getMeal().getMealName()} | Quantity: {self.getQuantity()} | Price: ${self.getMealPrice()} |"
@@ -108,7 +108,6 @@ class orderItems(SPXCafe):
         sql = None 
         sql = f'''INSERT INTO orderItems (orderId, mealId, quantity, mealPrice) VALUES ('{orderId}','{mealId}','{quantity}','{mealPrice}')'''
         self.dbPutData(sql)
-
 
 # getters/ setters
     def setOrderItemId(self, orderItemId=None):

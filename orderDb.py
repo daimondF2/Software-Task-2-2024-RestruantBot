@@ -55,6 +55,8 @@ class orderDb(SPXCafe):
         sql =None
         if customerId:
             sql = f'''SELECT count(*) AS count FROM Orders WHERE customerId = '{customerId}' ''' #sql checks for amount of usernames in database
+        elif self.getCustomerId():
+            sql = f'''SELECT count(*) AS count FROM Orders WHERE customerId = '{self.getCustomerId()}' '''
             # print(sql)
         if sql:
             countData = self.dbGetData(sql)

@@ -67,20 +67,18 @@ class tenOutOfTenRestaurant(SPXCafe):
 
     def runMenu(self):
         '''displays the menu'''
+        self.callMenu.setMenuName("TenOutOfTen") # build fuzzy
         request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
         # request = input("menu, course, find a meal: ")
         # ask for what they would like to see
         menuRQ = self.getOptions(request, self.menuOptions)
         running = True
         while running:
-            self.callMenu.setMenuName("TenOutOfTen") # build fuzzy
             if menuRQ in self.menuRequest[0]:
                 self.callMenu.display()
                 running = False
             elif menuRQ in self.coursesRequest[0]:
                 self.callMenu.displayCourses()
-                # courseRequest = self.SuperWaiter.listen("Which course would you like to look at or would you like to go back to option?")
-                # courseRequest = input("what course? ").lower() #to do fuzzy
                 choice = self.courseFuzzy()
                 if choice == "starter" or "entree":    # doesnt work if someone inputs starter so this is needed
             #             # find meal in course
@@ -90,22 +88,14 @@ class tenOutOfTenRestaurant(SPXCafe):
                 elif choice  == "main":                 # doing this cbecuase same as others
                     self.callMenu.findCourse(choice)
                 else:
-                    self.SuperWaiter.say("Cannot find Course")
-                running = False             # ask for what course or go back # to go back call a function that recalls the function
+                    self.SuperWaiter.say("Cannot find Course")            # ask for what course or go back # to go back call a function that recalls the function
             elif menuRQ in self.findMealRequest[0]:
                     # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
                 searchMeal = input("what meal you want to find: ")
                 self.findMeal(searchMeal, menuVer=True) #find meal function
                 running =  False
                     # find all meals
-                # find meal in a course
-                # if self.mealInfo.isMatch(searchMeal):
-                #     print('match')
-                # else:
-                #     print("not matched")
-                # foundMeal = self.mealInfo.findMeal(searchMeal)
-                # if foundMeal:
-                #     foundMeal.display()      
+                # find meal in a course   
             else:
                 running =False
         # make a match case senario using fuzzy logic where the waiter listens
@@ -224,10 +214,6 @@ class tenOutOfTenRestaurant(SPXCafe):
             self.customer.checkOut()
         else:
             self.options()
-        # if self.order == False:
-        #     self.getRequest()
-        # else:
-        #     print("done")
     def findMealId(self, mealName=None):
         '''find Meals using there Names'''
         mealList = self.callMenu.findMeal(mealName)
@@ -338,12 +324,6 @@ class tenOutOfTenRestaurant(SPXCafe):
                     matches = [match]
                 elif confidence == maxConfidence:
                     matches.append(match)
-            # print(f" You have matched: {','.join(matches)} with confidence level {maxConfidence}% {len(matches)}")
-            # if len(matches)>1:
-            #     print("Sorry, you need to choose only one! Try again")
-            #     options = matches
-            #     matches = []
-            #     maxConfidence = 0
         return matches[0] if len(matches)>0 else []
     def menuChoiceRequest(self):
         '''Key words for menu'''

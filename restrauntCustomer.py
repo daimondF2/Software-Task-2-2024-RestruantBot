@@ -58,7 +58,7 @@ class tenOutOfTenCustomer(SPXCafe):
         if self.orderHS.existDbOrder():
             for orders in self.getOrderHistory():
                 total = 0
-                print(f"Order Date: {orders.getOrderDates()}")
+                print(f"Order Date: {orders.getOrderDates()}    |   Order Number: {orders.getOrderId()}")
                 for orderitems in orders.getAllOrder():
                     orderitems.display()
                     total += orderitems.getMealPrice() * orderitems.getQuantity()
@@ -85,7 +85,7 @@ class tenOutOfTenCustomer(SPXCafe):
             print(f"Meal: {orderItems[2]} | Quantity: {orderItems[1]} | Total Price: {totalPrice} | Single Meal Price: {mealData[1]}")
         print(f"| Total Order Price: {totalOrderPrice} |")
 
-    def checkOut(self):
+    def checkOut(self): 
         '''checkOut system'''
         customerOrder = self.getBasket()
         self.displayBasket()
@@ -162,8 +162,7 @@ class tenOutOfTenCustomer(SPXCafe):
 
 def main():
     '''test harness'''
-    customer= tenOutOfTenCustomer()
-    customer.setCustomer(userName='diamondf')
+    customer= tenOutOfTenCustomer(userName='diamondf')
     # customer.setBasket(meal="steak",quantity=3)
     # customer.setBasket(meal='streak',quantity=2)
     # print(customer.getBasket())
