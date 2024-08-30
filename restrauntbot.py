@@ -68,7 +68,7 @@ class tenOutOfTenRestaurant(SPXCafe):
     def runMenu(self):
         '''displays the menu'''
         self.callMenu.setMenuName("TenOutOfTen") # build fuzzy
-        request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False) 
+        request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False).lower()
         # request = input("menu, course, find a meal: ")
         # ask for what they would like to see
         menuRQ = self.getOptions(request, self.menuOptions)
@@ -91,7 +91,7 @@ class tenOutOfTenRestaurant(SPXCafe):
                     self.SuperWaiter.say("Cannot find Course")            # ask for what course or go back # to go back call a function that recalls the function
             elif menuRQ in self.findMealRequest[0]:
                     # searchMeal = self.SuperWaiter.listen("What meal do you want to search for?")
-                searchMeal = input("what meal you want to find: ")
+                searchMeal = input("what meal do you want to find: ")
                 self.findMeal(searchMeal, menuVer=True) #find meal function
                 running =  False
                     # find all meals
@@ -102,7 +102,8 @@ class tenOutOfTenRestaurant(SPXCafe):
         # to what the customer wants
     def courseFuzzy(self):
         self.callMenu.displayCourses()
-        request = self.SuperWaiter.listen("Which course would you like to look at?")
+        request = self.SuperWaiter.listen("Which course would you like to look at?").lower()
+        print("What Course would you like to look at? ")
         # courseRequest = input("what course? ").lower() #to do fuzzy
         self.courseList = ["main", "starter", "entree", "dessert", "finisher"]
         for course in self.courseList:
@@ -189,22 +190,26 @@ class tenOutOfTenRestaurant(SPXCafe):
                 # fuzzy logic will take a lot more code as whenever I 
                 # say a number it either turns out to 
                 # be a word or a number (I dont want to have to make something convert it for me
-                quantity = input("What amount? ")
-                self.customer.setBasket(self.findMealId(self.meal), quantity, self.meal)           # find the meal then add to basket # print(self.basket)
+                quantity = input("How many would you like ")
+                quantify = int(self.nlp.getQuantityBySpeech(quantity))
+                self.customer.setBasket(self.findMealId(self.meal), quantify, self.meal)           # find the meal then add to basket # print(self.basket)
                 self.customer.displayBasket()
                 totalItems += int(quantity)
                 # continueOrder = self.SuperWaiter.listen("Would you like to continue Ordering or go back options or abandon order: ") # TO DO FuZZY ADD KEY WORDS
                 # continueOrder = input("Would you like to continue Ordering or go back options or abandon order: ")
                 continueOrder = self.getOrderRequest()
                 if continueOrder in self.checkoutRequest[0] and totalItems >=3:
-                    self.customer.newOrder()
+                    self.customer.displayBasket()
+                    orderConfirm = self.SuperWaiter.listen("Would you like to confirm Order? ").lower()
+                    if orderConfirm in self.yesNo[0]:
+                        self.customer.checkOut()
                     ordering = False
                     self.SuperWaiter.say("Thank you for ordering!")
                     self.options()
                 elif continueOrder in self.abandonBasketRequest[0]:
-                    self.SuperWaiter.say("Are you sure you want to Abandon Order? If so please type yes")
-                    abandonConfirm = input("Are you sure you want to Abandon Order?: ").lower()
-                    if abandonConfirm == "yes":
+                    self.SuperWaiter.say("Are you sure you want to Abandon Order? If so please type yes") # for security reasons
+                    abandonConfirm = input("Are you sure you want to Abandon Order?: ").lower() # for security reasons and just in case user makes mistake(correction)
+                    if abandonConfirm in self.yesNo[0]:
                         self.customer.delBasket()
                         ordering = False
                         self.options()
@@ -274,6 +279,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         self.continueRequest =      [["continue", "order", "ordering"],     "continue ordering"]
         self.checkoutRequest =     [["finish", "check out","buy", "pay"],                           "checkout"]
         self.orderOptions = self.abandonBasketRequest[0] + self.optionsRequest[0] + self.continueRequest[0] + self.checkoutRequest[0]
+        self.yesNo =[["yes","yeh","mhm","sure"],           "Yes"]
     def getOrderRequest(self):
         '''gets customer request after ordering'''
         option = self.SuperWaiter.listen("Would you like to continue Ordering or go back options or abandon order?")

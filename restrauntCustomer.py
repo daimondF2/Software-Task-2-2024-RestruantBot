@@ -1,13 +1,10 @@
 from SPXCafe2 import SPXCafe
-from Avatar2 import Avatar
-import orderItems
 import orderDb
 class tenOutOfTenCustomer(SPXCafe):
 
     def __init__(self, userName=None, firstName=None, lastName =None, customerId = None):
         '''Constructor method'''
         super().__init__() #inheritence 
-        self.SuperWaiter = Avatar("tenOutOfTenRestaurant Bot")
         self.setCustomerId(customerId=customerId)
         self.__basket = [] # basket stuff
         self.setUserName(userName)
@@ -88,11 +85,7 @@ class tenOutOfTenCustomer(SPXCafe):
     def checkOut(self): 
         '''checkOut system'''
         customerOrder = self.getBasket()
-        self.displayBasket()
-        # orderConfirm = self.SuperWaiter.listen("Would you like to confirm Order? ").lower()
-        orderConfirm =input("yes? ")
-        if orderConfirm == "yes" or "yeh":
-            self.orderHS.createOrder(basket=self.getBasket())
+        self.orderHS.createOrder(basket=self.getBasket())
 
 # Getters/Setters
     def setCustomer(self, userName = None, userId =None): # will have to get customer Id

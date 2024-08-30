@@ -1,12 +1,9 @@
 from SPXCafe2 import SPXCafe
-from Avatar2 import Avatar
 import orderItems
-import restrauntCustomer
 class orderDb(SPXCafe):
     def __init__(self, customerId = None, orderId = None, orderDate = None):
         '''Constructor '''
         super().__init__()
-        self.SuperCustomer = Avatar("tenOutOfTenRestaurant Bot")
         self.setCustomerId(customerId)
         self.setOrderDates(orderDate)
         self.setOrderId(orderId)

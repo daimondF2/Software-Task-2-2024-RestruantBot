@@ -1,12 +1,8 @@
 from SPXCafe2 import SPXCafe
-from Avatar2 import Avatar
-import menu
 import Meal
-from rapidfuzz.fuzz import partial_ratio
 class orderItems(SPXCafe):
     def __init__(self, order = None, mealId = None, mealPrice = None, quantity = None):
         super().__init__()
-        self.SuperBot = Avatar("tenOutOfTenRestauraunt Bot")
         self.setOrder(order)
         # self.orderDb = orderDb.orderDb()
         self.totalPrice = 0
@@ -94,14 +90,6 @@ class orderItems(SPXCafe):
         '''different variation to .display()'''
         return f"| meal: {self.getMeal().getMealName()} | Quantity: {self.getQuantity()} | Price: ${self.getMealPrice()} |"
             
-    def isMatch(self, choice = None, match = None):
-        '''To match and gain confidence in words''' # To do later
-        confidence = partial_ratio(choice, match) # to edit
-        # print(confidence, choice, match)
-        if confidence >85:
-            return True
-        else:
-            return False 
         
     def addOrderItem(self, mealId=None, quantity=None, mealPrice = None,orderId =None):
         '''adds individual orders to system'''
