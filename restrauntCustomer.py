@@ -139,8 +139,28 @@ class tenOutOfTenCustomer(SPXCafe):
         return self.__lastName
     def getUserName(self):
         return self.__userName
-    def setBasket(self, meal, quantity, mealName):
-        self.__basket.append([meal, quantity, mealName])
+    def setBasket(self, mealnPrice, quantity, mealName):
+        basket = []
+        if self.__basket:
+            test = False
+            for orders in self.__basket:
+                # print(orders)
+                # print(orders[2])
+                if orders[2] == mealName: # checks if meal is already in the list
+                    addQuantity = orders[1]
+                    addQuantity += quantity # updates quantity
+                    basket.append([orders[0], addQuantity, mealName])
+                    self.__basket.remove(orders) # updates list
+                    test = True
+                
+            if test ==False: # if not add to list 
+                self.__basket.append([mealnPrice, quantity, mealName])
+        else:
+            # print(basket)
+            self.__basket.append([mealnPrice, quantity, mealName])
+            # print(self.__basket)
+        if basket: # used for list update
+            self.__basket += basket
     def getBasket(self):
         return self.__basket
     def delBasket(self):
@@ -156,12 +176,13 @@ class tenOutOfTenCustomer(SPXCafe):
 def main():
     '''test harness'''
     customer= tenOutOfTenCustomer(userName='diamondf')
-    # customer.setBasket(meal="steak",quantity=3)
-    # customer.setBasket(meal='streak',quantity=2)
-    # print(customer.getBasket())
-    # customer.setCustomer('diamondf')
-    # customer.displayBasket()
-    customer.displayOrderHistory()
+    customer.setBasket(mealnPrice=[1,30],quantity=3, mealName="steak")
+    customer.setBasket(mealnPrice=[2,0.01],quantity=2, mealName="streak")
+    customer.setBasket(mealnPrice=[1,30], quantity=2,mealName="steak")
+    print(customer.getBasket())
+    customer.setCustomer('diamondf')
+    customer.displayBasket()
+    # customer.displayOrderHistory()
     # customer.newOrder()
 
     # customer.getCusotmerNewOrReturning()

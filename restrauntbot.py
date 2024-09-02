@@ -192,7 +192,7 @@ class tenOutOfTenRestaurant(SPXCafe):
                 # be a word or a number (I dont want to have to make something convert it for me
                 quantity = input("How many would you like ")
                 quantify = int(self.nlp.getQuantityBySpeech(quantity))
-                self.customer.setBasket(self.findMealId(self.meal), quantify, self.meal)           # find the meal then add to basket # print(self.basket)
+                self.customer.setBasket(self.findMealIdPrice(self.meal), quantify, self.meal)           # find the meal then add to basket # print(self.basket)
                 self.customer.displayBasket()
                 totalItems += int(quantity)
                 # continueOrder = self.SuperWaiter.listen("Would you like to continue Ordering or go back options or abandon order: ") # TO DO FuZZY ADD KEY WORDS
@@ -219,8 +219,8 @@ class tenOutOfTenRestaurant(SPXCafe):
             self.customer.checkOut()
         else:
             self.options()
-    def findMealId(self, mealName=None):
-        '''find Meals using there Names'''
+    def findMealIdPrice(self, mealName=None):
+        '''find Meals using there Names and prices'''
         mealList = self.callMenu.findMeal(mealName)
         mealData = []
         if len(mealList) >1:
