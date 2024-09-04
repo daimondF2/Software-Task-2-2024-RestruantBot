@@ -115,15 +115,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         '''Exit '''
         self.SuperWaiter.say("Thank you for coming to Ten Out of Ten Resturant by Cree gaming")
         print("Thank you for coming to our thing")
-
-    def isMatch(self, request= None):
-        '''To match and gain confidence in words''' # To do later
-        confidence = partial_ratio(request, self.match()) # to edit
-        # print(courseName, self.getCourseName(), confidence)
-        if confidence >80:
-            return True
-        else:
-            return False      
+     
     def match(self): # key words and stuff
         '''Key words for requests'''
         self.exitRequest =      {
@@ -228,7 +220,7 @@ class tenOutOfTenRestaurant(SPXCafe):
                 mealData.append(meals.getMealId())
                 mealData.append(meals.getMealPrice())
                 # mealData.append(meals.getMealName())
-                print(mealData)
+                # print(mealData)
                 return mealData
         else:
             for meals in mealList[0]:
@@ -260,8 +252,8 @@ class tenOutOfTenRestaurant(SPXCafe):
             else:
                 return False
             if len(self.meal) > 1: # for more than 1 get the first 1 
-                # exactMeal = self.SuperBot.listen(f"Which {meal} do you want?")
-                exactMeal = input(f"Which {meal} do you want? ")
+                exactMeal = self.SuperWaiter.listen(f"Which {meal} do you want?").lower()
+                # exactMeal = input(f"Which {meal} do you want? ")
                 for food in self.mealList:
                     if self.isMatch(exactMeal, food):
                         self.SuperWaiter.say(f"You have chosen {food}") 
