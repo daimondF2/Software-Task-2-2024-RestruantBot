@@ -48,7 +48,6 @@ class tenOutOfTenCustomer(SPXCafe):
             self.customerId = self.dbPutData(sql)
             # self.setCustomerID(self.dbPutData(sql))
 
-
     def displayOrderHistory(self):
         '''connects to orderhistory to check history'''
         print("|---------------------- Past Orders ----------------------|")

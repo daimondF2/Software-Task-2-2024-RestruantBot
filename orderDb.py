@@ -101,7 +101,6 @@ class orderDb(SPXCafe):
                 self.order.addOrderItem(mealId=mealDataList[0], quantity=quantity, mealPrice=mealDataList[1], orderId=self.getOrderId())
                 print('FINISHED')
 
-
     # def orderFood(self):
     #     '''gets the order id by using order date'''
     #     sql = None
