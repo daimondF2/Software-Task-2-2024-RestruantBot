@@ -68,7 +68,7 @@ class tenOutOfTenRestaurant(SPXCafe):
     def runMenu(self):
         '''displays the menu'''
         self.callMenu.setMenuName("TenOutOfTen") # build fuzzy
-        request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?", useSR=False).lower()
+        request = self.SuperWaiter.listen("Would you like to see the whole Menu, find a course or find a meal?" ).lower()
         # request = input("menu, course, find a meal: ")
         # ask for what they would like to see
         menuRQ = self.getOptions(request, self.menuOptions)
@@ -298,7 +298,7 @@ class tenOutOfTenRestaurant(SPXCafe):
         return choice
     def getRequest(self):       # gets request Options
         '''gets customer Request'''
-        option = self.SuperWaiter.listen("What would you like to do?", useSR=False)
+        option = self.SuperWaiter.listen("What would you like to do?")
         choice = self.getOptions(option, self.mainOptions)
         if choice in self.exitRequest["keywords"]:
             response = self.exitRequest["response"]
